@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: WoodenShield
+  m_EditorClassIdentifier: Assembly-CSharp::PShield
+  shortDisplayName: Wooden SHield
+  description: 
+  inscription: 
+  weight: 4
+  cost: 20
+  cursed: 0
+  equippedStatMod:
+    moveSpeed: 0
+    attackSpeed: 0
+    permanent: 0
+    str: 0
+    dex: 0
+    mind: 0
+    shadow: 0
+    maxHealth: 0
+    maxMana: 0
+    healthRegen: 0
+    manaRegen: 0
+    armorBonus: 0
+    attackBonus: 0
+    physicalDM: 1
+    arcaneDM: 1
+    fireDM: 1
+    poisonDM: 1
+    burning: 0
+    scared: 0
+    charmed: 0
+    planar: 0
+    paralyzed: 0
+    frenzy: 0
+    confused: 0
+    blinded: 0
+    invisible: 0
+    poisoned: 0
+    pariah: 0
+    silenced: 0
+    darkness: 0
+    timeLeft: -1
+    interval: 0.5
+    pulse: 0
+    type: 0
+  armorBonus: 3
+  maxDexBonus: 0
+  armorCheckPenalty: 0
+  arcaneSpellFailureChance: 0
+  armorType: 0

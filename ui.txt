@@ -1,0 +1,77 @@
+
+>>MAIN MENU       [START]
+
+- character screen
+- skills screen
+- monster list
+- exit to main menu
+
+
+
+>>INVENTORY    [SQUARE]
+
+- inventory
+- equip 
+
+
+>>item options  
+
+- wear/wield, remove (equipment)
+- inscribe (equipment)
+- remove inscription (equipment)
+- activate (activatable equipment)
+- browse (book)
+- quaff (potion)
+- read (scroll)
+- eat (food)
+- inspect
+- throw
+- drop
+- destroy
+
+
+
+>>action mode   [ HOLD R2 ] ->scroll with dpad
+
+- walk
+- run
+- search
+- stealth
+- concentrate
+- rest
+
+
+- go up/down stairs
+- use ability/skill
+- fuel lightsource
+
+
+
+
+<<<<<<<<<<<<<<<< CURSOR >>>>>>>>>>>>>>>>
+
+- cycle between visible objects [TRIANGLE]
+- activate/fire	weapon, rod, wand, staff   [L1]
+
+>>things in the world      
+
+- pick up 
+- open (doors, chest)
+- close (doors)
+- bash (doors)
+- spike (door)
+- disarm (trap)
+- use (switch)
+- steal
+- look at
+
+
+
+
+
+
+
+
+
+
+
