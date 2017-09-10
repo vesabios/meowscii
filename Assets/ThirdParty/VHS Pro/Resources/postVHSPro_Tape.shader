@@ -1,4 +1,6 @@
-﻿Shader "Hidden/postVHSPro_Tape" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Hidden/postVHSPro_Tape" {
 	Properties {
 		_MainTex ("Render Input", 2D) = "white" {}
 	}
@@ -35,7 +37,7 @@
 
 				v2f vert (appdata i){
 				   	v2f o;
-				   	o.pos = mul( UNITY_MATRIX_MVP, i.vertex );
+				   	o.pos = UnityObjectToClipPos( i.vertex );
 				   	o.uv = o.pos.xy/o.pos.w;
 				   	o.uvn = float4( i.texcoord.xy, 0.0, 0.0);
 				   	return o;

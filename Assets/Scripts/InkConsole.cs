@@ -8,21 +8,21 @@ public class InkConsole : ScreenComponent
     public static InkConsole instance;
     public InkInputFrame inkInputFrame;
 
-    public class InkBTN
+    public class InkButton
     {
         public string s;
         public Rect r;
         public UnityEngine.Events.UnityAction callback;
     }
 
-    List<InkBTN> buttons = new List<InkBTN>();
+    List<InkButton> buttons = new List<InkButton>();
     List<string> strings = new List<string>();
 
     UnityEngine.Events.UnityAction callback;
 
     void Awake()
     {
-        active = false;
+        active = true;
         instance = this;
     }
 
@@ -56,7 +56,7 @@ public class InkConsole : ScreenComponent
 
     public void AddButton(string s, UnityEngine.Events.UnityAction callback)
     {
-        InkBTN b = new InkBTN();
+        InkButton b = new InkButton();
 
         b.s = s;
         b.callback = callback;
@@ -65,10 +65,14 @@ public class InkConsole : ScreenComponent
 
     }
 
+
     public void ClearAll()
     {
-        buttons = new List<InkBTN>();
+        buttons = new List<InkButton>();
         strings.Clear();
+
+		Screen.writeIndex = 0;
+
     }
 
 
@@ -82,10 +86,10 @@ public class InkConsole : ScreenComponent
 
     public int DrawBuffer()
     {
-        int y = 1;
+        int y = 3;
         for (int i=0; i<strings.Count; i++)
         {
-            y = (int)GUI.DrawStringWrappedBox(1, y, strings[i], Screen.GenerateBrush(0,63)).y+1;
+            y = (int)GUI.DrawStringWrappedBox(3, y, strings[i], Screen.GenerateBrush()).y+1;
         }
         return y+1;
 
@@ -93,6 +97,12 @@ public class InkConsole : ScreenComponent
 
     public void DrawButtons(int y)
     {
+
+		y++;
+		//y = 20;
+
+		int rowIncrement = 2;
+
         callback = null;
         int x = 1;
         int row = 0;
@@ -101,19 +111,19 @@ public class InkConsole : ScreenComponent
         {
 
             if (buttons[i].r.Contains(Screen.pointerPos)) {
-                buttons[i].r = GUI.DrawButton(x, y + (row * 3), buttons[i].s, GUI.ButtonMode.HIGHLIGHT);
+				buttons[i].r = GUI.DrawButton(x, y + (row * rowIncrement), buttons[i].s, GUI.ButtonMode.HIGHLIGHT);
                 callback = buttons[i].callback;
             }
             else
             {
-                buttons[i].r = GUI.DrawButton(x, y + (row * 3), buttons[i].s, GUI.ButtonMode.NORMAL);
+				buttons[i].r = GUI.DrawButton(x, y + (row * rowIncrement), buttons[i].s, GUI.ButtonMode.NORMAL);
             }
 
             maxWidth = (int)Mathf.Max(maxWidth, buttons[i].r.width);
 
             row++;
 
-            if (y+(row*3)> 29)
+			if (y+(row*rowIncrement)> 29)
             {
                 row = 0;
                 x += maxWidth +1;
@@ -122,6 +132,8 @@ public class InkConsole : ScreenComponent
         }
 
     }
+
+
 
     public override void PrimaryDown(Vector2 pos)
     {

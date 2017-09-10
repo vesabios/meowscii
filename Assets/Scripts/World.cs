@@ -31,7 +31,7 @@ public class World : MonoBehaviour {
     {
         // create a new world from scratch and save it to disk
 
-        PZone zone = PZoneDatabase.GetZone("Home");
+        PZone zone = PZoneDatabase.GetZone("TestAlpha");
         if (zone == null) Debug.Log("ZONE NOT FOUND");
         GameData.AddPZone(zone);
 

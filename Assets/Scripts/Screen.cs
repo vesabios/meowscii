@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 
 public class Screen : MonoBehaviour
@@ -14,6 +15,8 @@ public class Screen : MonoBehaviour
     }
 
     public static Screen instance;
+
+	public static float updateSpeed = 0.003f;
 
     public static Vector2 dims = new Vector3(60, 33);
     public Vector2 chardims = new Vector3(16, 32);
@@ -77,6 +80,27 @@ public class Screen : MonoBehaviour
     }
 
 
+	float updateTimer = 0;
+	public static int writeIndex = 0;
+	void Update() {
+
+		//if (_events.Count > 0) {
+
+			updateTimer += Time.deltaTime;
+			while (updateTimer > updateSpeed) {
+				updateTimer -= updateSpeed;
+				//if (_events.Count > 0) {
+
+					writeIndex++;
+					
+					//_events [0] ();
+					//_events.RemoveAt (0);
+				//}
+
+			}
+		//}
+
+	}
 
     void GetPointerPosition()
     {
@@ -173,6 +197,7 @@ public class Screen : MonoBehaviour
 
     }
 
+
     public static void DrawBuffer()
     {
 
@@ -183,7 +208,7 @@ public class Screen : MonoBehaviour
         }
         */
 
-        floatingTexture.SetPixels32(floatingBuffer);
+		floatingTexture.SetPixels32(floatingBuffer);
         floatingTexture.Apply();
 
         baseTexture.SetPixels32(baseBuffer);
@@ -215,33 +240,51 @@ public class Screen : MonoBehaviour
 
     public static void SetWorldPixelInScreenSpace(Vector3 location, Color32 brush, Layer layer = Layer.BASE) {
         SetPixel((Vector2)location - World.view.position, brush, layer);
+
     }
+
+	static List<System.Action> _events = new List<System.Action>();
 
     public static void SetPixel(Vector2 location, Color32 brush, Layer layer = Layer.BASE)
     {
        SetPixel((uint)location.x, (uint)location.y, brush, layer);
     }
 
+
+
+
     public static void SetPixel(uint x, uint y, Color32 brush, Layer layer = Layer.BASE)
     {
-        if (x >= 0)
-            if (y >= 0)
-                if (x < dims.x)
-                    if (y < dims.y)
-                    {
-                        uint index = CreateBufferIndex(x, y);
-                        if (index > baseBuffer.Length - 1) return;
+		SetPixelPhysical ((uint)x, (uint)y, brush, layer);
+		/*
+		var a0 = x;
+		var a1 = y;
+		var a2 = brush;
+		var a3 = layer;
+		_events.Add( () => SetPixelPhysical((uint)a0, (uint)a1, a2, a3));
+		*/
 
-                        if (layer == Layer.FLOATING)
-                        {
-                            floatingBuffer[index] = brush;
-                        }
-                        else
-                        {
-                            baseBuffer[index] = brush;
-                        }
-                    }
     }
+
+	static void SetPixelPhysical(uint x, uint y, Color32 brush, Layer layer = Layer.BASE) {
+		if (x >= 0)
+		if (y >= 0)
+		if (x < dims.x)
+		if (y < dims.y)
+		{
+			uint index = CreateBufferIndex(x, y);
+			if (index > baseBuffer.Length - 1) return;
+
+			if (layer == Layer.FLOATING)
+			{
+				floatingBuffer[index] = brush;
+			}
+			else
+			{
+				baseBuffer[index] = brush;
+			}
+		}
+	}
 
 
 

@@ -124,11 +124,14 @@ public class GUI : ScreenComponent {
 
         int maxU = 0;
 
-        for (int i = 0; i < s.Length; i++)
+		//int len = Mathf.Min (Screen.writeIndex, s.Length);
+
+		for (int i = 0; i < s.Length; i++)
         {
             int chr = System.Convert.ToInt32(s[i]);
             brush.r = (byte)chr;
-            Screen.SetPixel(new Vector2(u, v), brush, Screen.Layer.FLOATING);
+
+			if (i<Screen.writeIndex)  Screen.SetPixel(new Vector2(u, v), brush, Screen.Layer.FLOATING);
             maxU = Mathf.Max(u, maxU);
             u++;
             if (chr==32)
@@ -136,7 +139,7 @@ public class GUI : ScreenComponent {
                 // we're on a space, let's see if we can fit the next word.
                 int j = i;
                 bool breakNeeded = true;
-                while (j < s.Length && u < wrapPoint) {
+				while (j < s.Length && u < wrapPoint) {
                     int test_chr = System.Convert.ToInt32(s[j]);
                     if (test_chr==32)
                     {
@@ -209,10 +212,10 @@ public class GUI : ScreenComponent {
         }
 
 
-        DrawBox(x, y, s.Length + 2, 3, brush);
-        DrawString(x + 1, y + 1, s, brush);
+        DrawBox(x, y, s.Length + 2, 1, brush);
+        DrawString(x + 1, y, s, brush);
 
-        return new Rect(x, y, s.Length + 2, 3);
+        return new Rect(x, y, s.Length + 2, 1);
     }
 
  

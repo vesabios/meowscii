@@ -34,13 +34,18 @@ public class ScreenComponent : MonoBehaviour
         components.Remove(this);
     }
 
-
+	public static bool redraw = true;
     public static void DrawAllComponents()
-    {
+    {	
+
+		//if (!redraw)
+		//	return;
+
         for (int i = components.Count-1; i>=0; i--)
         {
             components[i].ScreenUpdate();
         }
+		redraw = false;
     }
 
     public static ScreenComponent GetTopComponent()

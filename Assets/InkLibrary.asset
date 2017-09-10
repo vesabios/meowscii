@@ -50,6 +50,67 @@ MonoBehaviour:
     errors: []
     warnings: []
     todos: []
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: 3413bcfac64f44ba9827370282ea6bdf, type: 3}
+    parent: {fileID: 0}
+    master: {fileID: 0}
+    includePaths:
+    - Globals.ink
+    - Oracle.ink
+    includes:
+    - {fileID: 102900000, guid: 92a5924fd72944036806ffa921de3afa, type: 3}
+    - {fileID: 102900000, guid: 9049173b9391f4043954c92e183455dd, type: 3}
+    jsonAsset: {fileID: 4900000, guid: e0f1b6779c8b044989c0de40ce96325d, type: 3}
+    compileErrors: []
+    errors: []
+    warnings: []
+    todos: []
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: 9049173b9391f4043954c92e183455dd, type: 3}
+    parent: {fileID: 102900000, guid: 3413bcfac64f44ba9827370282ea6bdf, type: 3}
+    master: {fileID: 102900000, guid: 3413bcfac64f44ba9827370282ea6bdf, type: 3}
+    includePaths: []
+    includes: []
+    jsonAsset: {fileID: 0}
+    compileErrors: []
+    errors: []
+    warnings: []
+    todos: []
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: 92a5924fd72944036806ffa921de3afa, type: 3}
+    parent: {fileID: 102900000, guid: 3413bcfac64f44ba9827370282ea6bdf, type: 3}
+    master: {fileID: 102900000, guid: 3413bcfac64f44ba9827370282ea6bdf, type: 3}
+    includePaths: []
+    includes: []
+    jsonAsset: {fileID: 0}
+    compileErrors: []
+    errors: []
+    warnings: []
+    todos: []
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: 5daedb8664153429cb7c7db3c085da28, type: 3}
+    parent: {fileID: 0}
+    master: {fileID: 0}
+    includePaths:
+    - Globals.ink
+    includes:
+    - {fileID: 102900000, guid: 6bc8538e846a5466a9d9681702d666f0, type: 3}
+    jsonAsset: {fileID: 4900000, guid: 06ea9b80df2ce4f3a9276c59e8a16ffb, type: 3}
+    compileErrors: []
+    errors: []
+    warnings: []
+    todos: []
+  - compileAutomatically: 0
+    inkAsset: {fileID: 102900000, guid: 6bc8538e846a5466a9d9681702d666f0, type: 3}
+    parent: {fileID: 102900000, guid: 5daedb8664153429cb7c7db3c085da28, type: 3}
+    master: {fileID: 102900000, guid: 5daedb8664153429cb7c7db3c085da28, type: 3}
+    includePaths: []
+    includes: []
+    jsonAsset: {fileID: 0}
+    compileErrors: []
+    errors: []
+    warnings: []
+    todos: []
   compilationStack: []
   customInklecateOptions:
     runInklecateWithMono: 0

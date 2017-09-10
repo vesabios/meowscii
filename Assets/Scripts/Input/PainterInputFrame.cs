@@ -24,28 +24,32 @@ public class PainterInputFrame : InputFrame
 
         if (Input.GetKey(KeyCode.LeftAlt))
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) { Painter.SetBrushPage(0); }
-            if (Input.GetKeyDown(KeyCode.Alpha2)) { Painter.SetBrushPage(1); }
-            if (Input.GetKeyDown(KeyCode.Alpha3)) { Painter.SetBrushPage(2); }
-            if (Input.GetKeyDown(KeyCode.Alpha4)) { Painter.SetBrushPage(3); }
-            if (Input.GetKeyDown(KeyCode.Alpha5)) { Painter.SetBrushPage(4); }
-            if (Input.GetKeyDown(KeyCode.Alpha6)) { Painter.SetBrushPage(5); }
-            if (Input.GetKeyDown(KeyCode.Alpha7)) { Painter.SetBrushPage(6); }
-            if (Input.GetKeyDown(KeyCode.Alpha8)) { Painter.SetBrushPage(7); }
-            if (Input.GetKeyDown(KeyCode.Alpha9)) { Painter.SetBrushPage(8); }
-            if (Input.GetKeyDown(KeyCode.Alpha0)) { Painter.SetBrushPage(9); }
+            if (Input.GetKeyDown(KeyCode.F1)) { Painter.SetBrushPage(0); }
+            if (Input.GetKeyDown(KeyCode.F2)) { Painter.SetBrushPage(1); }
+            if (Input.GetKeyDown(KeyCode.F3)) { Painter.SetBrushPage(2); }
+            if (Input.GetKeyDown(KeyCode.F4)) { Painter.SetBrushPage(3); }
+            if (Input.GetKeyDown(KeyCode.F5)) { Painter.SetBrushPage(4); }
+            if (Input.GetKeyDown(KeyCode.F6)) { Painter.SetBrushPage(5); }
+            if (Input.GetKeyDown(KeyCode.F7)) { Painter.SetBrushPage(6); }
+            if (Input.GetKeyDown(KeyCode.F8)) { Painter.SetBrushPage(7); }
+            if (Input.GetKeyDown(KeyCode.F9)) { Painter.SetBrushPage(8); }
+            if (Input.GetKeyDown(KeyCode.F10)) { Painter.SetBrushPage(9); }
+
+			if (Input.GetKey(KeyCode.H)) { Painter.ShowHelp(); }
+
+
         } else
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) { Painter.SetBrushIndex(0); }
-            if (Input.GetKeyDown(KeyCode.Alpha2)) { Painter.SetBrushIndex(1); }
-            if (Input.GetKeyDown(KeyCode.Alpha3)) { Painter.SetBrushIndex(2); }
-            if (Input.GetKeyDown(KeyCode.Alpha4)) { Painter.SetBrushIndex(3); }
-            if (Input.GetKeyDown(KeyCode.Alpha5)) { Painter.SetBrushIndex(4); }
-            if (Input.GetKeyDown(KeyCode.Alpha6)) { Painter.SetBrushIndex(5); }
-            if (Input.GetKeyDown(KeyCode.Alpha7)) { Painter.SetBrushIndex(6); }
-            if (Input.GetKeyDown(KeyCode.Alpha8)) { Painter.SetBrushIndex(7); }
-            if (Input.GetKeyDown(KeyCode.Alpha9)) { Painter.SetBrushIndex(8); }
-            if (Input.GetKeyDown(KeyCode.Alpha0)) { Painter.SetBrushIndex(9); }
+            if (Input.GetKeyDown(KeyCode.F1)) { Painter.SetBrushIndex(0); }
+            if (Input.GetKeyDown(KeyCode.F2)) { Painter.SetBrushIndex(1); }
+            if (Input.GetKeyDown(KeyCode.F3)) { Painter.SetBrushIndex(2); }
+            if (Input.GetKeyDown(KeyCode.F4)) { Painter.SetBrushIndex(3); }
+            if (Input.GetKeyDown(KeyCode.F5)) { Painter.SetBrushIndex(4); }
+            if (Input.GetKeyDown(KeyCode.F6)) { Painter.SetBrushIndex(5); }
+            if (Input.GetKeyDown(KeyCode.F7)) { Painter.SetBrushIndex(6); }
+            if (Input.GetKeyDown(KeyCode.F8)) { Painter.SetBrushIndex(7); }
+            if (Input.GetKeyDown(KeyCode.F9)) { Painter.SetBrushIndex(8); }
+            if (Input.GetKeyDown(KeyCode.F10)) { Painter.SetBrushIndex(9); }
         }
 
 
@@ -58,7 +62,17 @@ public class PainterInputFrame : InputFrame
         if (Input.GetKeyDown(KeyCode.S)) { Painter.SaveImage(); }
         if (Input.GetKeyDown(KeyCode.R)) { Painter.ToggleSplatter(); }
 
- 
+		if (Input.GetKeyDown (KeyCode.B)) {
+			Painter.SetMode (Painter.Mode.BOX);
+		} 
+
+		if (Input.GetKeyDown (KeyCode.M)) {
+			Painter.SetMode (Painter.Mode.MOUSE);
+		} 
+
+		if (Input.GetKeyDown (KeyCode.K)) {
+			Painter.SetMode (Painter.Mode.CURSOR);
+		} 
 
 
         if (Input.GetKeyDown(KeyCode.Backspace)) { }

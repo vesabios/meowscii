@@ -112,8 +112,8 @@ public class Game : ScreenComponent {
             if (cursorMoveTimer > 0.05f)
                 cursorMoveTimer = 0;
 
-            if (cursorBlinkTimer < 0.25f)
-                Screen.SetPixel(cursorLocation, Screen.GenerateBrush(63, 20, '#'), Screen.Layer.FLOATING);
+            if (cursorBlinkTimer < 0.35f)
+                Screen.SetPixel(cursorLocation, Screen.GenerateBrush(63, 20, 'X'), Screen.Layer.FLOATING);
             if (cursorBlinkTimer > 0.35f)
                 cursorBlinkTimer = 0;
         }

@@ -10,9 +10,11 @@ public class InputDevice : MonoBehaviour {
 
     public static void PollDevices()
     {
-        foreach (InputDevice inputDevice in allDevices)
-        {
-            inputDevice.Tick();
-        }
+		if (allDevices != null) {
+			
+			foreach (InputDevice inputDevice in allDevices) {
+				inputDevice.Tick ();
+			}
+		}
     }
 }

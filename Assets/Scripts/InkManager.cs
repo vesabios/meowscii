@@ -21,7 +21,6 @@ public class InkManager : MonoBehaviour
     {
         story = new Story(inkJSONAsset.text);
 
-
         story.BindExternalFunction("SetScene", (string arg1) => {
 
             // SceneManager.instance.SwitchScene(arg1);
@@ -38,6 +37,8 @@ public class InkManager : MonoBehaviour
     {
 
         InkConsole.instance.ClearAll();
+
+
 
         while (story.canContinue)
         {
@@ -66,6 +67,10 @@ public class InkManager : MonoBehaviour
                     StartStory();
                 });
         }
+
+		//Debug.Log ("refreshing view...");
+		ScreenComponent.redraw = true;
+
     }
 
     void OnClickChoiceButton(Choice choice)
