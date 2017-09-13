@@ -34,7 +34,7 @@ public class GUIListBoxItem : GUIElement
 
     }
 
-    protected override void Select()
+	protected override void Select()
     {
         listBoxSelect(index);
     }

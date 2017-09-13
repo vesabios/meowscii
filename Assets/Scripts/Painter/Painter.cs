@@ -5,125 +5,30 @@ public class Painter : ScreenComponent {
 
 	class Cursor {
 
-		public Vector3 position;
-
-		float timer = 0.0f;
-		float delay = 0.25f;
-		public bool active = true;
+		public Vector2 position;
 		public void Update() {
 
-			timer += Time.deltaTime;
-			if (timer > delay) {
-				timer -= delay;
-				active = !active;
+			if (position.y < 2) {
+				if (World.view.y > -2) {
+					World.ScrollView (new Vector2 (0, -1));
+				}
 			}
 
+			if (position.y > Screen.dims.y-1) {
+				if (World.view.y < Landscape.dims.y- Screen.dims.y) { 
+					World.ScrollView (new Vector2 (0, 1));
+				}
+			}
+
+			position.y = Mathf.Max (2, position.y);
+			position.y = Mathf.Min (Screen.dims.y-1, position.y);
+
+			Screen.SetHardwareCursorPosition (position);
 		}
 
 	}
 
-	class PaintBox {
 
-		public Color32 brush = new Color32();
-
-		// indices are ascii codes for TL, TR, BL, BR, T, L, R, B, and codepage, respectively
-		public int[,] styles = new int[7,9] {
-			{218,191,192,217,196,179,179,196,0},
-			{201,187,200,188,205,186,186,205,0},
-			{96,98,128,130,111,127,127,111,1},
-			{99, 101,131,133,100,115,117,132,1},
-			{102,104,134,136,103,118,120,135,1},
-			{105,107,137,139,106,121,123,138,1},
-			{144,146,176,178,145,160,162,177,1},
-		};
-
-		public int currentStyle = 0;
-
-
-		public bool preview = false;
-
-		public Rect r;
-
-		public PaintBox() {
-			brush = Screen.GenerateBrush();
-		}
-
-		public void SetTopLeft(Vector2 v) {
-			r.position = v;
-		}
-
-		public void SetBottomRight(Vector2 v) {
-
-			r.width = v.x - r.position.x;
-			r.height = v.y - r.position.y;
-
-		}
-
-		public void Draw() {
-			if (preview) Preview ();
-		}
-
-		public void Preview() {
-			DrawIntoLayer (Screen.Layer.FLOATING);
-		}
-
-		public void Commit() {
-			DrawIntoLayer (Screen.Layer.BASE);
-
-		}
-
-		void DrawIntoLayer(Screen.Layer layer) {
-
-			int fg = brush.g % 64;
-			int bg = brush.b % 64;
-			int cp = styles [currentStyle, 8];
-
-			Rect s = r;
-
-			Vector2 TL = new Vector2(Mathf.Min (s.xMin, s.xMax),  Mathf.Min (s.yMin, s.yMax));
-
-			s.position = TL;
-			s.width = Mathf.Abs (s.width);
-			s.height = Mathf.Abs (s.height);
-
-			// draw H and V lines
-
-			for (uint y = (uint)s.yMin; y <= (uint)s.yMax; y++) {
-
-				int chr = styles [currentStyle, 5];
-
-				Screen.SetPixel ((uint)s.xMin , y, Screen.GenerateBrush(fg,bg,chr,cp), layer);
-
-				chr = styles [currentStyle, 6];
-
-				Screen.SetPixel ((uint)s.xMax , y, Screen.GenerateBrush(fg,bg,chr,cp), layer);
-
-			}
-			for (uint x = (uint)s.xMin; x <= (uint)s.xMax; x++) {
-
-				int chr = styles [currentStyle, 4];
-
-				Screen.SetPixel (x , (uint)s.yMin, Screen.GenerateBrush(fg,bg,chr,cp), layer);
-
-				chr = styles [currentStyle, 7];
-
-
-				Screen.SetPixel (x , (uint)s.yMax, Screen.GenerateBrush(fg,bg,chr,cp), layer);
-
-			}
-
-			// draw corner pieces
-
-			Screen.SetPixel ((uint)s.xMin , (uint)s.yMin, Screen.GenerateBrush(fg,bg,styles [currentStyle, 0],cp), layer);
-			Screen.SetPixel ((uint)s.xMax , (uint)s.yMin, Screen.GenerateBrush(fg,bg,styles [currentStyle, 1],cp), layer);
-			Screen.SetPixel ((uint)s.xMin , (uint)s.yMax, Screen.GenerateBrush(fg,bg,styles [currentStyle, 2],cp), layer);
-			Screen.SetPixel ((uint)s.xMax , (uint)s.yMax, Screen.GenerateBrush(fg,bg,styles [currentStyle, 3],cp), layer);
-
-
-
-		}
-
-	}
 
 	public enum Mode
 	{
@@ -136,7 +41,9 @@ public class Painter : ScreenComponent {
     public static Painter instance;
     public static PainterInputFrame inputFrame;
 
-    public static Color32 paintColor = new Color(0, 60, '#');
+    public static Color32 currentBrush = new Color(0, 60, '#');
+	static bool showExtendedBar = false;
+
 
     public static int fg;
     public static int bg;
@@ -145,9 +52,11 @@ public class Painter : ScreenComponent {
 
 	public static Mode mode;
 
+	static bool showCursorPreview = false;
+
 	static PaintBox paintBox = new PaintBox();
 
-	Cursor cursor = new Cursor();
+	static Cursor cursor = new Cursor();
 	bool primaryDown = false;
 
 
@@ -172,7 +81,7 @@ public class Painter : ScreenComponent {
         instance = this;
         inputFrame = gameObject.AddComponent<PainterInputFrame>();
 
-        paintColor = Screen.GenerateBrush(60, 0, '#');
+        currentBrush = Screen.GenerateBrush(60, 0, '#');
         active = false;
 
         brushes = new Color32[100];
@@ -180,6 +89,8 @@ public class Painter : ScreenComponent {
 		mode = Mode.MOUSE;
 
         GetSavedBrushes();
+
+		Palette.SetSelectionFromBrush (brushes [0]);
 
         fg = brushes[0].g % 64;
         bg = brushes[0].b %64;
@@ -198,6 +109,9 @@ public class Painter : ScreenComponent {
         Debug.Log("activating painter...");
         instance.active = true;
         inputFrame.Activate();
+		World.SetViewOffset(new Vector2(0,2));
+		cursor.position = new Vector3 (0, 2);
+		World.SetViewMode (World.ViewMode.FREE);
     }
 
     public static void Deactivate()
@@ -205,6 +119,10 @@ public class Painter : ScreenComponent {
         Debug.Log("deactivating painter");
         instance.active = false;
         PlayerInputFrame.instance.Activate();
+		World.SetViewOffset(new Vector2(0,0));
+					
+		World.SetViewMode (World.ViewMode.WORLD_OBJECT);
+
 
     }
 
@@ -243,6 +161,11 @@ public class Painter : ScreenComponent {
 		case Mode.MOUSE:
 			{
 				brushIndex = newIndex;
+
+				int slot = (brushIndex + (brushPage * 10));
+
+				currentBrush = brushes [slot];
+
 				break;
 			}
 		case Mode.BOX:
@@ -254,6 +177,18 @@ public class Painter : ScreenComponent {
 		}
     }
 
+	public static void IncrementBrushPage() {
+		brushPage++;
+		if (brushPage > 10)
+			brushPage = 10;
+	}
+
+	public static void DecrementBrushPage() {
+		brushPage--;
+		if (brushPage < 0)
+			brushPage = 0;
+	}
+
     public static void SetBrushPage(int newPage)
 	{
 		switch (mode) {
@@ -264,6 +199,8 @@ public class Painter : ScreenComponent {
 			}
 		case Mode.BOX:
 			{
+				paintBox.currentStyle = newPage;
+
 				break;
 			}
 
@@ -320,7 +257,6 @@ public class Painter : ScreenComponent {
 
 
 
-		cursor.position = Screen.pointerPos;
 		cursor.Update ();
 
 
@@ -340,21 +276,24 @@ public class Painter : ScreenComponent {
 
 					Color32 brush = GetPaintBrush ();
 
-					if (instance.cursor.active && !instance.primaryDown)
-						brush =  Screen.GenerateBrush (60, 60, 219, 0);
-
 					dirty = true;
-					uint offset = (uint)(brushSize / 2);
-					for (uint x = 0; x < brushSize; x++) {
-						for (uint y = 0; y < brushSize; y++) {
-							if (splatter) {
-								if (Random.value > 0.9)
+
+					if (showCursorPreview) {
+						
+
+						uint offset = (uint)(brushSize / 2);
+						for (uint x = 0; x < brushSize; x++) {
+							for (uint y = 0; y < brushSize; y++) {
+								if (splatter) {
+									if (Random.value > 0.9)
+										Screen.SetPixel ((uint)cursor.position.x + x - offset, (uint)cursor.position.y + y - offset, brush, Screen.Layer.FLOATING);
+								} else {
 									Screen.SetPixel ((uint)cursor.position.x + x - offset, (uint)cursor.position.y + y - offset, brush, Screen.Layer.FLOATING);
-							} else {
-								Screen.SetPixel ((uint)cursor.position.x + x - offset, (uint)cursor.position.y + y - offset, brush, Screen.Layer.FLOATING);
+								}
 							}
 						}
 					}
+
 				}
 				break;
 			}
@@ -362,25 +301,30 @@ public class Painter : ScreenComponent {
 		}
 
 		DrawBrushBar();
-			
-
-
-
-
 
     }
+
+
+	public static void MoveCursor(Vector2 moveVector) {
+		showCursorPreview = false;
+		cursor.position += moveVector;
+		cursor.position.x = Mathf.Max (0, cursor.position.x);
+		cursor.position.y = Mathf.Max (0, cursor.position.y);
+
+	}
 
 
 	void DrawHelp() {
 		if (drawHelp) {
 			
-			GUI.DrawString (2, 4, "Fn:     Select Char", Screen.GenerateBrush ());
-			GUI.DrawString (2, 5, "Alt-Fn: Select Char Pg", Screen.GenerateBrush ());
-			GUI.DrawString (2, 6, "Space:  Toggle Pallette", Screen.GenerateBrush ());
-			GUI.DrawString (2, 7, "RMB:    Brush Picker", Screen.GenerateBrush ());
-			GUI.DrawString (2, 8, "LMB:    Paint", Screen.GenerateBrush ());
-			GUI.DrawString (2, 9, "R:      Toggle Scatter", Screen.GenerateBrush ());
-			GUI.DrawString (2, 10, "S:      Save", Screen.GenerateBrush ());
+			GUI.DrawString (2, 4, "Fn      Select Char", Screen.GenerateBrush ());
+			GUI.DrawString (2, 5, "PgUp/Dn Select Char Pg", Screen.GenerateBrush ());
+			GUI.DrawString (2, 6, "Space   Toggle Palette", Screen.GenerateBrush ());
+			GUI.DrawString (2, 7, "RMB     Brush Picker", Screen.GenerateBrush ());
+			GUI.DrawString (2, 8, "Alt.RMB Brush Picker & Store", Screen.GenerateBrush ());
+			GUI.DrawString (2, 9, "LMB     Paint", Screen.GenerateBrush ());
+			GUI.DrawString (2, 10, "Alt.R       Toggle Scatter", Screen.GenerateBrush ());
+			GUI.DrawString (2, 11, "Alt.S      Save", Screen.GenerateBrush ());
 
 			drawHelp = false;
 		}
@@ -390,6 +334,15 @@ public class Painter : ScreenComponent {
 	void DrawMode() {
 		GUI.DrawString (0, 32, mode.ToString(), Screen.GenerateBrush ());
 
+	}
+
+
+	public static void ShowBar() {
+		showExtendedBar = true; 
+	}
+
+	public static void HideBar() {
+		showExtendedBar = false;
 	}
 
     void DrawBrushBar()
@@ -413,7 +366,7 @@ public class Painter : ScreenComponent {
 					}
 					int slot = (i + (brushPage * 10));
 
-					GUI.DrawString((int)x, 0, "F"+((i + 1)%10).ToString(), brush);
+					GUI.DrawString((int)x, 0, ((i + 1)%10).ToString()+"=", brush);
 					Screen.SetPixel(x + 2, 0, brushes[slot], Screen.Layer.FLOATING);
 
 				}				
@@ -429,15 +382,14 @@ public class Painter : ScreenComponent {
 
 					uint x = (uint)(4 + (i * 4));
 
-					int color = (brushIndex == i) ? 63 : 60;
+					int color = (paintBox.currentStyle == i) ? 63 : 60;
 
 					int slot = (i + (brushPage * 10));
 
 					GUI.DrawString((int)x, 0, "F"+((i + 1)%10).ToString(), Screen.GenerateBrush(color, 0, chr, 0));
 
-					//brush.g = (byte)fg;
-					//brush.b = (byte)bg;
-					Screen.SetPixel(x + 2, 0, Screen.GenerateBrush(color, 0, chr, cp), Screen.Layer.FLOATING);
+
+					Screen.SetPixel(x + 2, 0, Screen.GenerateBrush(fg, bg, chr, cp), Screen.Layer.FLOATING);
 
 				}					
 
@@ -451,6 +403,14 @@ public class Painter : ScreenComponent {
 
     }
 
+	public static void TextInput(char s) {
+		
+		SetPixel((uint)cursor.position.x, (uint)cursor.position.y, Screen.GenerateBrush(currentBrush.g, currentBrush.b, (int)s));
+
+		cursor.position.x += 1;
+
+	}
+
     public static void GetSavedBrushes()
     {
         for (int i=0; i<100; i++)
@@ -458,29 +418,33 @@ public class Painter : ScreenComponent {
                 brushes[i] = HexToColor(PlayerPrefs.GetString("Brush" + i));
     }
 
-    public static void UpdateCurrentBrush()
-    {
-        SetCurrentBrush(Screen.GenerateBrush(fg, bg, chr, cp));
-    }
 
     public static void SetCurrentBrush(Color32 newBrush)
     {
+		
 		switch (mode) {
-		case Mode.MOUSE:
-			{
-				int slot = (brushIndex + (brushPage * 10));
+			case Mode.MOUSE:
+				{
 
-				brushes[slot] = newBrush;
-				PlayerPrefs.SetString("Brush"+slot, ColorToHex(newBrush));
-				PlayerPrefs.Save();				
-				break;
-			}
-		case Mode.BOX:
-			{
-				paintBox.brush = newBrush;
-				break;
+					currentBrush = newBrush;
 
-			}
+					if (Input.GetKey (KeyCode.LeftAlt)) {
+
+						int slot = (brushIndex + (brushPage * 10));
+
+						brushes [slot] = newBrush;
+						PlayerPrefs.SetString ("Brush" + slot, ColorToHex (newBrush));
+						PlayerPrefs.Save ();	
+
+					}
+					break;
+				}
+			case Mode.BOX:
+				{
+					paintBox.brush = newBrush;
+					break;
+
+				}
 		}
 
     }
@@ -488,7 +452,8 @@ public class Painter : ScreenComponent {
 
     public static Color32 GetPaintBrush()
     {
-        return brushes[brushIndex];
+		return currentBrush;
+//        return brushes[brushIndex];
 
     }
 
@@ -521,7 +486,7 @@ public class Painter : ScreenComponent {
 	}
 
 	void CommitBox() {
-		EndBox ();
+		paintBox.Commit ();
 
 	}
 
@@ -530,10 +495,8 @@ public class Painter : ScreenComponent {
 
 	}
 
-    public void SetPixel(uint x, uint y, Color32 brush)
+    public static void SetPixel(uint x, uint y, Color32 brush)
     {
-        //        Screen.SetPixel(x,y, brush);
-
         Landscape.SetPixel(x + (uint)World.view.x, y + (uint)World.view.y, brush);
     }
 
@@ -548,6 +511,8 @@ public class Painter : ScreenComponent {
 
 			case Mode.MOUSE:
 				{
+					cursor.position = pos;
+
 					Paint(pos);
 					break;
 
@@ -562,17 +527,26 @@ public class Painter : ScreenComponent {
 		primaryDown = true;
     }
 
+	public override void PrimaryMove(Vector2 pos) {
+		showCursorPreview = true;
+		cursor.position = pos;
+	}
+
     public override void PrimaryDrag(Vector2 pos)
     {
 		switch (mode) {
 
 			case Mode.MOUSE:
 				{
+					cursor.position = pos;
+
 					Paint (pos);
 					break;
 				}
 			case Mode.BOX:
 				{
+
+
 					paintBox.SetBottomRight (pos);
 					break;
 				}
@@ -582,6 +556,7 @@ public class Painter : ScreenComponent {
 
     public override void PrimaryUp()
     {
+
 		switch (mode) {
 
 		case Mode.MOUSE:
@@ -592,6 +567,7 @@ public class Painter : ScreenComponent {
 		case Mode.BOX:
 			{
 				CommitBox ();
+				SetMode (Mode.MOUSE);
 				break;
 
 			}
@@ -605,8 +581,11 @@ public class Painter : ScreenComponent {
     {
         Color32 sample = Landscape.GetPixel((uint)Screen.pointerPos.x + (uint)World.view.x, (uint)Screen.pointerPos.y + (uint)World.view.y);
 
+		Palette.SetSelectionFromBrush (sample);
 
         SetCurrentBrush(sample);
+
+
 
     }
 

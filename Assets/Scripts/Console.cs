@@ -17,7 +17,7 @@ public class Console : MonoBehaviour {
 		consoleInputFrame.Activate ();
 
 
-		InkManager.instance.StartStory ();
+		InkManager.StartStory ();
 
 	}
 	

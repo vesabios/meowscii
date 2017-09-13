@@ -7,10 +7,13 @@ public class ObjectEditor : ScreenComponent {
 
     public static ObjectEditor instance;
     public static ObjectEditorInputFrame inputFrame;
+	List<PItem> allItems;
 
     GUIElement inspector;
 
     PD objectToInspect;
+
+	PItem selectedItem;
 
     void Awake()
     {
@@ -18,40 +21,42 @@ public class ObjectEditor : ScreenComponent {
         instance = this;
         inputFrame = gameObject.AddComponent<ObjectEditorInputFrame>();
 
+
     }
+
+
 
     void CreateObjectCreationWindow()
     {
         inspector = gameObject.AddComponent<GUIFrame>();
-        inspector.rect = new Rect(1, 1, 20, 31);
+        inspector.rect = new Rect(1, 4, 20, 13);
         GUIElement.rootElement = inputFrame;
 
         GUIText headerText = (GUIText)inspector.AddChild<GUIText>();
         headerText.text = "Object Selector";
-        headerText.rect = new Rect(1, 1, 30, 1);
+        headerText.rect = new Rect(1, 4, 30, 1);
 
 
-        List<PItem> allItems = ItemDatabase.GetAllItems();
-        List<string> displayItems = new List<string>();
-        foreach (PItem item in allItems)
-            displayItems.Add(item.shortDisplayName);
-        foreach (PItem item in allItems)
-            displayItems.Add(item.shortDisplayName);
-        foreach (PItem item in allItems)
-            displayItems.Add(item.shortDisplayName);
-        foreach (PItem item in allItems)
-            displayItems.Add(item.shortDisplayName);
-        foreach (PItem item in allItems)
-            displayItems.Add(item.shortDisplayName);
+        allItems = ItemDatabase.GetAllItems();
+		List<string> displayItems = new List<string>();
         foreach (PItem item in allItems)
             displayItems.Add(item.shortDisplayName);
 
-        GUIListBox lb = (GUIListBox)inspector.AddChild<GUIListBox>();
-        lb.rect = new Rect(1, 1, inspector.rect.width-2, 10);
-        lb.SetItems(displayItems);
+        GUIListBox listBox = (GUIListBox)inspector.AddChild<GUIListBox>();
+        listBox.rect = new Rect(1, 1, inspector.rect.width-2, 10);
 
+		listBox.SetItems (displayItems);
 
+			//new System.Action<int>((int index) => this.Callback(index))); // yowza... well, it works.
+
+		listBox.listBoxCallback += Callback;
     }
+
+	void Callback(int index) {
+		Debug.Log (index + " selected");
+		selectedItem = allItems [index];
+
+	}
 
     void CreateObjectInspectorWindow()
     {
@@ -107,6 +112,8 @@ public class ObjectEditor : ScreenComponent {
         instance.active = true;
         inputFrame.Activate();
 
+		//instance.CreateObjectInspectorWindow ();
+
         instance.CreateObjectCreationWindow();
     }
 
@@ -131,7 +138,7 @@ public class ObjectEditor : ScreenComponent {
     {
         if (inspector.PrimaryDown(pos)) return;
 
-        PItem item = (PItem)ItemDatabase.GetItem("LongSword");
+		PItem item = (PItem)ItemDatabase.GetItem(selectedItem.name);
         item.location = (Vector3)pos+(Vector3)World.view.position;
         World.AddWorldObject(item);
 

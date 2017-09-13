@@ -17,7 +17,10 @@ public class GUIListBox : GUIElement
     int index = -1;
     int scroll = 0;
     int totalLines = 0;
-    int halfHeight = 0;
+	int halfHeight = 0;
+
+
+	public event ListBoxSelect listBoxCallback;
 
     public override void Start()
     {
@@ -26,7 +29,7 @@ public class GUIListBox : GUIElement
         downArrowBrush = Screen.GenerateBrush(35, 32, 31, 0);
     }
 
-    public void SetItems(List<string> itemsToShow)
+	public void SetItems(List<string> itemsToShow)
     {
         items = itemsToShow;
 
@@ -47,13 +50,18 @@ public class GUIListBox : GUIElement
             displayItems.Add(t);
         }
 
+		//callback = callbackAction;
 
     }
 
     void ListBoxSelect(int selectIndex)
     {
-        Debug.Log(index);
         index = selectIndex;
+
+		if (listBoxCallback != null) {
+			listBoxCallback (selectIndex);
+			//callback (selectIndex);
+		}
 
         if (!active)
         {

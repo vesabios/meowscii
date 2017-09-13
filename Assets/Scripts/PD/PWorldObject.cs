@@ -5,16 +5,16 @@ using System.Collections;
 public class PWorldObject : PD {
 
     [HideInInspector]
-    public System.Guid zoneID;
+	public System.Guid zoneID = System.Guid.Empty;
 
     [HideInInspector]
-    public SerializableVector3 location;
+	public SerializableVector3 location = new SerializableVector3 (0, 0, 0);
 
     [Space(10)]
-    public string shortDisplayName;
+    public string shortDisplayName = "description";
 
     [TextArea(3, 10), Space(10)]
-    public string description;
+    public string description = "item";
 
 
     [HideInInspector]

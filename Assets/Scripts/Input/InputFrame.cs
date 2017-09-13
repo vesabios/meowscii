@@ -36,7 +36,7 @@ public class InputFrame : MonoBehaviour {
 
     public virtual void Activate() {
 
-        Debug.Log("activing [" + this + "] input frame, last frame is: "+currentFrame);
+        Debug.Log("activating [" + this + "] input frame, last frame is: "+currentFrame);
 
         lastFrame = currentFrame;
 

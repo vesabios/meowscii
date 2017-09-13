@@ -35,7 +35,7 @@ public class GUIText : GUIElement {
 
     }
 
-    protected override void Select() {
+	protected override void Select() {
         if (bCanActivate)
             Activate();
     }

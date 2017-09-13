@@ -149,24 +149,23 @@ public class Screen : MonoBehaviour
 
         if (topComponent != null)
         {
-            if (Input.GetMouseButton(0))
-            {
-                if (!primaryDown)
-                {
-                    topComponent.PrimaryDown(pointerPos);
-                    primaryDown = true;
-                }
-                else
-                {
-                    if (bPointerMoved) topComponent.PrimaryDrag(pointerPos);
-                }
+			if (Input.GetMouseButton (0)) {
+				if (!primaryDown) {
+					topComponent.PrimaryDown (pointerPos);
 
-            }
-            else if (primaryDown)
-            {
-                topComponent.PrimaryUp();
-                primaryDown = false;
-            }
+					primaryDown = true;
+				} else {
+					if (bPointerMoved)
+						topComponent.PrimaryDrag (pointerPos);
+				}
+
+			} else if (primaryDown) {
+				topComponent.PrimaryUp ();
+				primaryDown = false;
+			} else {
+				if (bPointerMoved) topComponent.PrimaryMove(pointerPos);
+
+			}
 
             if (Input.GetMouseButton(1))
             {
@@ -302,7 +301,7 @@ public class Screen : MonoBehaviour
 
         Vector2 viewOffset = new Vector2(World.view.x / Landscape.dims.x, ((Landscape.dims.y - dims.y) - World.view.y) / Landscape.dims.y);
 
-        mat.SetVector("_BaseLayerDims", new Vector4(viewOffset.x, viewOffset.y, dims.x / Landscape.dims.x, dims.y / Landscape.dims.y)); // character map dimensions
+        mat.SetVector("_BaseLayerDims", new Vector4(viewOffset.x, viewOffset.y, dims.x / Landscape.dims.x, dims.y / Landscape.dims.y));
 
     }
 
@@ -343,6 +342,12 @@ public class Screen : MonoBehaviour
 
         }
     }
+
+	public static void SetHardwareCursorPosition(Vector2 pos) {
+		mat.SetVector ("_CursorPos", new Vector4(pos.x, (dims.y-1) - pos.y, 0, 0));
+
+	}
+
 
 
     public static Color32 GenerateBrush(int fg = 63, int bg = 0, int c = 0, int page = 0)

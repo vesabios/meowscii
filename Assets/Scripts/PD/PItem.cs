@@ -5,6 +5,6 @@ using System.Collections.Generic;
 [System.Serializable]
 public class PItem : PWorldObject {
 
-    public string inscription;
+    public string inscription = "";
 
 }

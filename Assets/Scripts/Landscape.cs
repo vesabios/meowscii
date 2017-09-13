@@ -37,7 +37,9 @@ public class Landscape : MonoBehaviour {
 
     static uint CreateBufferIndex(Vector2 location)
     {
-        return CreateBufferIndex((uint)location.x, (uint)location.y);
+		float x = Mathf.Clamp (location.x, 0, dims.x);
+		float y = Mathf.Clamp (location.y, 0, dims.y);
+		return CreateBufferIndex((uint)x, (uint)y);
     }
 
     static uint CreateBufferIndex(uint x, uint y)

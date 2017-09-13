@@ -59,6 +59,9 @@ public class Engine : MonoBehaviour {
         nullInputFrame.Activate();
         playerInputFrame.Activate();
 
+		InkManager.StartStory ();
+
+
         Game.CreateNewGame();
 
         BeginNewGame();

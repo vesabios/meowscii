@@ -12,6 +12,7 @@ public class InkInputFrame : InputFrame
 	protected override void Awake() {
 		base.Awake();
 		instance = this;
+
 	}
 	public static bool IsActive() { return instance.active; }
 
@@ -43,6 +44,12 @@ public class InkInputFrame : InputFrame
 	public override void CheckKeyboard()
 	{
 
+		if (Input.GetKeyDown(KeyCode.Escape)) { 
+		
+			InkManager.Escape ();
+		}
+
+
 		if (Input.GetKeyDown(KeyCode.UpArrow)) { moveVector.y = 1; }
 		if (Input.GetKeyDown(KeyCode.DownArrow)) { moveVector.y = -1; }
 		if (Input.GetKeyUp(KeyCode.UpArrow)) { moveVector.y = 0; }
@@ -53,15 +60,14 @@ public class InkInputFrame : InputFrame
 		if (Input.GetKeyUp(KeyCode.RightArrow)) { moveVector.x = 0; }
 
 
-		if (Input.GetKeyDown(KeyCode.F1)) { Painter.Activate(); }
-		if (Input.GetKeyDown(KeyCode.F2)) { ObjectEditor.Activate(); }
+		if (Input.GetKeyDown(KeyCode.F1)) { }
+		if (Input.GetKeyDown(KeyCode.F2)) { }
 
 		if (Input.GetKeyDown(KeyCode.Backspace)) { }
 		if (Input.GetKeyDown(KeyCode.Delete)) { }
 		if (Input.GetKeyDown(KeyCode.Tab)) { }
 		if (Input.GetKeyDown(KeyCode.Return)) { }
 		if (Input.GetKeyDown(KeyCode.Pause)) { }
-		if (Input.GetKeyDown(KeyCode.Escape)) { }
 		if (Input.GetKeyDown(KeyCode.Backspace)) { }
 		if (Input.GetKeyDown(KeyCode.Space)) { }
 		if (Input.GetKeyDown(KeyCode.Keypad0)) { }

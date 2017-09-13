@@ -6,9 +6,11 @@ INCLUDE Oracle.ink
 -> inn_room
 == inn_room
 
-You're in Luska, City of Sails. You've been in town only a short time. You were working aboard a ship which arrived here and have been spending the days looking for new adventures.
+You're in Luska, [City of Sails]. You've been in town only a short time. You were working aboard a ship which arrived here and have been spending the days looking for new adventures.
 
 You wake up at the Cutlass, a seedy inn on Half-Moon Street near the city's piers.
+
+->DONE
 
 -*[...]
 

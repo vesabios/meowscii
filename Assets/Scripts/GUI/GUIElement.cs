@@ -100,13 +100,14 @@ public class GUIElement : InputFrame
     {
         foreach(GUIElement element in children)
         {
-            if (element.PrimaryDown(pointerPosition)) return true;
+            if (element.PrimaryDown(pointerPosition)) return true;   // let children catch the mouse press
         }
 
+		// otherwise, if no children pick this up, let's see if this class can pick it up
         if (isWithin(pointerPosition))
         {
 
-            Select();
+			Select();
             return true;
         }
 
@@ -114,7 +115,31 @@ public class GUIElement : InputFrame
     }
 
 
-    protected virtual void Select() { }
+	public override bool SecondaryDown(Vector2 pointerPosition)
+	{
+		foreach(GUIElement element in children)
+		{
+			if (element.SecondaryDown(pointerPosition)) return true;   // let children catch the mouse press
+		}
+
+		// otherwise, if no children pick this up, let's see if this class can pick it up
+		if (isWithin(pointerPosition))
+		{
+
+			SecondarySelect();
+			return true;
+		}
+
+		return false;          
+	}
+
+
+
+
+
+	protected virtual void Select() { }
+	protected virtual void SecondarySelect() { }
+
     protected virtual void Cancel() { }
     protected virtual void ProcessInputState() { }
 
@@ -137,74 +162,11 @@ public class GUIElement : InputFrame
         keyRepeatTimer = 0;
     }
 
-    public override void OnButtonCrossDown(InputState inputState)
-    {
-
-    }
-
-    public override void OnButtonCrossUp(InputState inputState)
-    {
-
-    }
-
     public override void OnButtonCircleDown(InputState inputState)
     {
         Cancel();
     }
 
-    public override void OnButtonCircleUp(InputState inputState)
-    {
 
-    }
-
-    public override void OnButtonSquareDown(InputState inputState)
-    {
-
-    }
-
-    public override void OnButtonSquareUp(InputState inputState)
-    {
-
-    }
-
-    public override void OnButtonTriangleDown(InputState inputState)
-    {
-
-    }
-
-    public override void OnButtonTriangleUp(InputState inputState)
-    {
-
-    }
-
-    public override void OnButtonOptionDown(InputState inputState)
-    {
-
-    }
-
-    public override void OnButtonOptionUp(InputState inputState)
-    {
-
-    }
-
-    public override void OnLeftStickDown(InputState inputState)
-    {
-
-    }
-
-    public override void OnLeftStickUp(InputState inputState)
-    {
-
-    }
-
-    public override void OnRightStickDown(InputState inputState)
-    {
-
-    }
-
-    public override void OnRightStickUp(InputState inputState)
-    {
-
-    }
 
 }

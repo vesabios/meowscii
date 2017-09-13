@@ -54,6 +54,9 @@ public class Game : ScreenComponent {
     void Awake()
     {
         instance = this;
+
+		gameObject.AddComponent<ObjectLibrary> ();
+
     }
 
 
@@ -68,11 +71,6 @@ public class Game : ScreenComponent {
             displayItems.Add(item.shortDisplayName);
         }
 
-        /*
-        ListBox lb = instance.gameObject.AddComponent<ListBox>();
-        lb.SetItems(displayItems);
-        lb.Show(1, 1, 30, 10);
-        */
     }
 
     public static void CreateNewGame()
@@ -86,6 +84,8 @@ public class Game : ScreenComponent {
         player.zoneID = World.currentZone.guid;
 
         Engine.player = player;
+
+		World.FocusOnObject (player);
     }
 
     public static void MoveCursor(Vector2 moveVector)
@@ -101,21 +101,20 @@ public class Game : ScreenComponent {
         cursorLocation.y = Mathf.Clamp(cursorLocation.y, 0, Screen.dims.y);
     }
 
+	public void OnUpdatePointer() {
+		cursorLocation = Screen.pointerPos;
+	}
+
     public override void ScreenUpdate()
     {
         World.Draw();
 
+		OnUpdatePointer ();
+
         if (PlayerInputFrame.IsActive())
         {
-            cursorBlinkTimer += Time.deltaTime;
-            cursorMoveTimer += Time.deltaTime;
-            if (cursorMoveTimer > 0.05f)
-                cursorMoveTimer = 0;
+			Screen.SetHardwareCursorPosition (cursorLocation);
 
-            if (cursorBlinkTimer < 0.35f)
-                Screen.SetPixel(cursorLocation, Screen.GenerateBrush(63, 20, 'X'), Screen.Layer.FLOATING);
-            if (cursorBlinkTimer > 0.35f)
-                cursorBlinkTimer = 0;
         }
 
     }

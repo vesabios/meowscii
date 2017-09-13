@@ -47,6 +47,10 @@ public class ItemDatabase  {
 		return null;
 	}
 
+	public static void AddItem(PItem item) {
+		items.Add (item);
+	}
+
 	static public List<PItem> GetAllItems() {
 		ValidateDatabase();
 		return items;

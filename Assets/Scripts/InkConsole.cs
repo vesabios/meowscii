@@ -6,7 +6,6 @@ public class InkConsole : ScreenComponent
 {
 
     public static InkConsole instance;
-    public InkInputFrame inkInputFrame;
 
     public class InkButton
     {

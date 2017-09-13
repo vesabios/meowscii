@@ -6,12 +6,12 @@ public class PEquipment : PItem {
 
     [Header("Equipment"), Space(10)]
     [RangeAttribute(0,100)]
-    public uint weight;
-    public uint cost;
-    public bool cursed;
+    public uint weight = 0;
+    public uint cost = 0;
+    public bool cursed = false;
 
     [HideInInspector]
-    public System.Guid actorSoulBinding;
+	public System.Guid actorSoulBinding = System.Guid.Empty;
 
     [Space(20)]
     public StatMod equippedStatMod;

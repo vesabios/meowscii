@@ -116,22 +116,23 @@ public class GUI : ScreenComponent {
     }
 
 
-    public static Vector2 DrawStringWrapped(int x, int y, string s, Color32 brush)
+    public static Vector2 DrawStringWrapped(int x, int y, string s, Color32 brush, int wrapLength = 30)
     {
         int u = x;
         int v = y;
-        int wrapPoint = x + 30;
+
+		int wrapPoint = x + wrapLength;
 
         int maxU = 0;
-
-		//int len = Mathf.Min (Screen.writeIndex, s.Length);
 
 		for (int i = 0; i < s.Length; i++)
         {
             int chr = System.Convert.ToInt32(s[i]);
             brush.r = (byte)chr;
 
-			if (i<Screen.writeIndex)  Screen.SetPixel(new Vector2(u, v), brush, Screen.Layer.FLOATING);
+			if (i<Screen.writeIndex)  
+				Screen.SetPixel(new Vector2(u, v), brush, Screen.Layer.FLOATING);
+
             maxU = Mathf.Max(u, maxU);
             u++;
             if (chr==32)
@@ -173,6 +174,12 @@ public class GUI : ScreenComponent {
         DrawString(x, y, s, brush);
     }
 
+
+	public static void DrawBox(Rect r, int fg = 60, int bg = 0)
+	{
+		DrawBox((int)r.x, (int)r.y, (int)r.width, (int)r.height, Screen.GenerateBrush(fg,bg,0,0));
+	}
+
     public static void DrawBox(int x, int y, int w, int h, Color32 brush)
     {
         for (int i = 0; i < w; i++)
@@ -183,6 +190,10 @@ public class GUI : ScreenComponent {
             }
         }
     }
+
+	public static void SetPixel(int x, int y, Color32 brush) {
+		Screen.SetPixel(new Vector2(x , y), brush, Screen.Layer.FLOATING);
+	}
 
     public enum ButtonMode
     {
@@ -215,7 +226,7 @@ public class GUI : ScreenComponent {
         DrawBox(x, y, s.Length + 2, 1, brush);
         DrawString(x + 1, y, s, brush);
 
-        return new Rect(x, y, s.Length + 2, 1);
+		return new Rect(x, y, s.Length + 2, 1);
     }
 
  

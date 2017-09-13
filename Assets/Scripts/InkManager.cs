@@ -6,20 +6,35 @@ using Ink.Runtime;
 public class InkManager : MonoBehaviour
 {
     public static InkManager instance;
+	static InputFrame inkInputFrame;
+
 
     [SerializeField]
     private TextAsset inkJSONAsset;
-    private Story story;
+    private static Story story;
 
 
     void Awake()
     {
+		if (instance != null)
+			return;
+		
         instance = this;
+
+		inkInputFrame = gameObject.AddComponent<InkInputFrame>();
+
+
     }
 
-    public void StartStory()
+
+	public static void ExitStory() {
+		InkConsole.instance.ClearAll();
+		inkInputFrame.ActivateLast();
+	}
+
+    public static void StartStory()
     {
-        story = new Story(inkJSONAsset.text);
+        story = new Story(instance.inkJSONAsset.text);
 
         story.BindExternalFunction("SetScene", (string arg1) => {
 
@@ -30,10 +45,12 @@ public class InkManager : MonoBehaviour
 
         });
 
+		inkInputFrame.Activate ();
+
         RefreshView();
     }
 
-    void RefreshView()
+    static void RefreshView()
     {
 
         InkConsole.instance.ClearAll();
@@ -61,11 +78,15 @@ public class InkManager : MonoBehaviour
         }
         else
         {
+			
             CreateChoiceView(
-                "End of story.\nRestart?", 
+                "[X]", 
                 delegate {
-                    StartStory();
+					ExitStory();
+
                 });
+
+
         }
 
 		//Debug.Log ("refreshing view...");
@@ -73,47 +94,31 @@ public class InkManager : MonoBehaviour
 
     }
 
-    void OnClickChoiceButton(Choice choice)
+    static void OnClickChoiceButton(Choice choice)
     {
         story.ChooseChoiceIndex(choice.index);
         RefreshView();
     }
 
-    void CreateContentView(string text)
+    static void CreateContentView(string text)
     {
 
-        InkConsole.instance.AddText(text);
+		// render text, presumably in a box
+		InkConsole.instance.AddText(text);
 
-         // render text, presumably in a box
-            
-        /*
-        Text storyText = Instantiate(textPrefab) as Text;
-        storyText.text = text;
-        storyText.transform.SetParent(canvas.transform, false);
 
-        */
     }
 
-    void CreateChoiceView(string text, UnityEngine.Events.UnityAction callback)
+    static void CreateChoiceView(string text, UnityEngine.Events.UnityAction callback)
     {
 
         InkConsole.instance.AddButton("> "+text, callback);
 
-        // render buttons and assign callback
-
-        /*
-        Button choice = Instantiate(buttonPrefab) as Button;
-        choice.transform.SetParent(canvas.transform, false);
-
-        Text choiceText = choice.GetComponentInChildren<Text>();
-        choiceText.text = text;
-
-        HorizontalLayoutGroup layoutGroup = choice.GetComponent<HorizontalLayoutGroup>();
-        layoutGroup.childForceExpandHeight = false;
-
-        choice.onClick.AddListener(callback);
-        */
-
     }
+
+	public static void Escape() {
+		ExitStory ();
+
+	}
 
 }

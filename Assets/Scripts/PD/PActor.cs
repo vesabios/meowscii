@@ -52,16 +52,15 @@ public class PActor : PWorldObject {
 
         Vector2 loc = (Vector2)(Vector3)location;
 
-        Vector2 vertical = v;
-        vertical.x = 0;
-        Vector2 horizontal = v;
-        horizontal.y = 0;
+		Vector2 vertical = new Vector2 (v.y, 0);
+		Vector2 horizontal = new Vector2 (0, v.x);
 
         if (Game.CanActorOccupyLocation(this, loc+v))
         {
             location.y += v.y;
             location.x += v.x;
-        } else if (Game.CanActorOccupyLocation(this, loc+horizontal))
+        } 
+		else if (Game.CanActorOccupyLocation(this, loc + horizontal))
         {
             location.x += horizontal.x;
         }
@@ -69,8 +68,6 @@ public class PActor : PWorldObject {
         {
             location.y += vertical.y;
         }
-
-
 
         return true;
     }

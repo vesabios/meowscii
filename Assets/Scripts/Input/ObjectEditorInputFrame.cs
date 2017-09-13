@@ -8,7 +8,13 @@ public class ObjectEditorInputFrame : GUIElement
     {
         if (Input.GetKeyDown(KeyCode.Escape)) { ObjectEditor.Deactivate(); }
 
-        if (Input.GetKeyDown(KeyCode.S)) { World.StoreZoneData(); }
+		if (Input.GetKey (KeyCode.LeftControl)) {
+			
+			if (Input.GetKeyDown (KeyCode.S)) {
+				World.StoreZoneData ();
+			}
+		}
+
 
     }
 

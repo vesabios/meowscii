@@ -69,7 +69,7 @@ public class GUIInt : GUIElement
 
     }
 
-    protected override void Select()
+	protected override void Select()
     {
         if (active) return;
         if (bCanActivate)

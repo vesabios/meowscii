@@ -42,6 +42,8 @@ Shader "Screen" {
 
 			float4 _BaseLayerDims;
 
+			fixed2 _CursorPos;
+
 
 
 			v2f vert(appdata_t v)
@@ -74,8 +76,16 @@ Shader "Screen" {
 			fixed4 frag(v2f i) : SV_Target
 			{
 				fixed4 layer = tex2D(_FloatingLayer, i.texcoord );
-				fixed4 buf = tex2D(_BaseLayer, (i.texcoord * _BaseLayerDims.zw) + _BaseLayerDims.xy);
 
+				float2 tex = (i.texcoord * _BaseLayerDims.zw) + _BaseLayerDims.xy;
+
+				fixed4 buf = tex2D(_BaseLayer, tex);
+
+				// this zeros out areas outside the map boundaries
+				buf *= step(tex.y,1) * step(0,tex.y) * step(tex.x,1) * step(0,tex.x);
+
+
+				// if alpha is 1 this is a pass-through pixel
 				if (layer.a == 1) {
 					buf = layer;
 				}
@@ -86,6 +96,13 @@ Shader "Screen" {
 				int character = int(buf.r * 255.0f);
 
 
+				float2 cursorTest = i.texcoord * _Dims.xy;
+
+
+				float2 screenPos = i.texcoord * _Dims.xy;
+				screenPos.x = (int)screenPos.x;
+				screenPos.y = (int)screenPos.y;
+
 				float2 charuv = fmod(i.texcoord * _Dims.xy, float2(1, 1)); 
 				// now normalized 
 
@@ -93,6 +110,12 @@ Shader "Screen" {
 
 				charuv.x = (int)charuv.x;
 				charuv.y = (int)charuv.y; // clamp to nearest int
+
+				float xx = (screenPos.x == _CursorPos.x) && (screenPos.y == _CursorPos.y) ? 1 : 0;
+				half cursorBrightness = xx * step(0,charuv.y) * step (charuv.y, 1);
+
+				cursorBrightness *= step(fmod(_Time.w, 1),0.5);
+
 				charuv *= float2(1.0f / 8.0f, 1.0f / 8.0f); // back to normalized range
 				charuv *= _CharDims.zw;
 
@@ -100,11 +123,16 @@ Shader "Screen" {
 
 				charuv += charMapOffset(character, codepage);
 
-				fixed4 col = tex2D(_CharMap, charuv);
 
-	
 
-				return lerp(bg,fg,col.r);
+
+				fixed4 col = tex2D(_CharMap, charuv) ;
+
+				fixed4 coloredGlyph = lerp(bg,fg,col.r);
+
+				fixed4 cursor = fixed4(cursorBrightness,cursorBrightness,cursorBrightness,0);
+
+				return coloredGlyph + cursor;
 			}
 
 			ENDCG

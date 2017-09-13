@@ -10,6 +10,8 @@ public class ScreenComponent : MonoBehaviour
 
     public virtual void PrimaryDown(Vector2 pos) { }
     public virtual void PrimaryDrag(Vector2 pos) { }
+	public virtual void PrimaryMove(Vector2 pos) { }
+
     public virtual void PrimaryUp() { }
 
     public virtual void SecondaryDown(Vector2 pos) { }

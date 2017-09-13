@@ -4,6 +4,15 @@ using System.Collections.Generic;
 
 public class World : MonoBehaviour {
 
+	public enum ViewMode {
+		NULL,
+		FREE,
+		WORLD_OBJECT
+	}
+
+	public static ViewMode viewMode = ViewMode.WORLD_OBJECT;
+	static PWorldObject focusObject;
+
     public static PZone currentZone;
     static PZone lastZone;
 
@@ -12,6 +21,8 @@ public class World : MonoBehaviour {
     public static List<PD> staticObjects;
 
     public static Rect view;
+
+	public static Vector2 viewOffset = Vector2.zero;
 
     static Vector2 playerViewMargin = new Vector2(16, 12);
 
@@ -25,6 +36,10 @@ public class World : MonoBehaviour {
         staticObjects = new List<PD>();
 
     }
+
+	public static void SetViewOffset(Vector2 v) {
+		viewOffset = v;
+	}
 
 
     public static void GenerateNewWorld()
@@ -87,7 +102,6 @@ public class World : MonoBehaviour {
         CalculateView();
 
 
-
         // draw view of atlas
 
         // draw items
@@ -102,6 +116,8 @@ public class World : MonoBehaviour {
             }
         }
 
+		// draw objects
+
         foreach (PD pd in GameData.data)
         {
             if (pd is PWorldObject)
@@ -115,30 +131,60 @@ public class World : MonoBehaviour {
 
     }
 
+
+	public static void FocusOnObject(PWorldObject obj) {
+		focusObject = obj;
+		viewMode = ViewMode.WORLD_OBJECT;
+	}
+
     static void CalculateView()
     {
 
-        if (Engine.player.location.x > view.x + Screen.dims.x-playerViewMargin.x)
-        {
-            view.x += 1;
-        } else if (Engine.player.location.x < view.x + playerViewMargin.x)
-        {
-            view.x -= 1;
-        }
-
-        if (Engine.player.location.y > view.y + Screen.dims.y - playerViewMargin.y)
-        {
-            view.y += 1;
-        }
-        else if (Engine.player.location.y < view.y + playerViewMargin.y)
-        {
-            view.y -= 1;
-        }
-
-        view.x = Mathf.Clamp(view.x, 0, Landscape.dims.x - Screen.dims.x);
-        view.y = Mathf.Clamp(view.y, 0, Landscape.dims.y - Screen.dims.y);
-
-
+		switch (viewMode) {
+		case ViewMode.WORLD_OBJECT:
+			{
+				CalculateViewForActor (focusObject);
+				break;
+			}
+		}
 
     }
+
+	static void CalculateViewForActor(PWorldObject a) {
+		if (a.location.x > view.x + Screen.dims.x-playerViewMargin.x)
+		{
+			view.x += 1;
+		} else if (a.location.x < view.x + playerViewMargin.x)
+		{
+			view.x -= 1;
+		}
+
+		if (a.location.y > view.y + Screen.dims.y - playerViewMargin.y)
+		{
+			view.y += 1;
+		}
+		else if (a.location.y < view.y + playerViewMargin.y)
+		{
+			view.y -= 1;
+		}
+
+		ClampView ();
+
+
+	}
+
+	public static void SetViewMode (ViewMode vm) {
+		viewMode = vm;
+	}
+
+
+	public static void ScrollView (Vector2 scrollVector) {
+		view.position += scrollVector;
+
+	}
+	static void ClampView() {
+		view.x = Mathf.Clamp(view.x, 0, Landscape.dims.x - Screen.dims.x);
+		view.y = Mathf.Clamp(view.y, 0, Landscape.dims.y - Screen.dims.y);
+	}
+
 }
