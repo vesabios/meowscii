@@ -33,8 +33,8 @@ namespace ActorHSM
 		protected void GetNewWaypoint() {
 
 
-			//SetAttribute (Data.waypoint, Engine.player.location);
-			//return;
+			SetAttribute (Data.waypoint, Engine.player.location);
+			return;
 
 			// for now we will find a random location in the game
 
@@ -160,6 +160,7 @@ namespace ActorHSM
 			if (HasWaypoint ()) { 
 
 				if (DistanceRemaining () > 0) {
+					SetAttribute (Data.waypoint, Engine.player.location);
 
 					Owner.MoveTowardsLocation (Data.waypoint.Value);
 

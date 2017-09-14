@@ -120,7 +120,7 @@ public class Dijkstra : ScriptableObject {
 		int maxx = -1;
 		int maxy = -1;
 
-		while (iter<64) {
+		while (iter<128) {
 
 			changed = false;
 			iter++;
@@ -136,17 +136,19 @@ public class Dijkstra : ScriptableObject {
 
 					v =  graph[x,y];
 
-					if ( v < OMIT_VALUE) {
+					if ( v < OMIT_VALUE && v>iter) {
 
 						lvn = IntMin(v, graph[x-1,y]);
 						lvn = IntMin(lvn, graph[x,y-1]);
 						lvn = IntMin(lvn, graph[x+1,y]);
 						lvn = IntMin(lvn, graph[x,y+1]);
-
+						lvn = IntMin(lvn, graph[x-1,y-1]);
+						lvn = IntMin(lvn, graph[x+1,y-1]);
+						lvn = IntMin(lvn, graph[x+1,y+1]);
+						lvn = IntMin(lvn, graph[x-1,y+1]);
 
 						if ((v-lvn)>=2) {
 							graph[x,y] = lvn+1;
-
 
 							minx = Mathf.Min (x - 2, minx);
 							miny = Mathf.Min (y - 2, miny);
@@ -342,6 +344,8 @@ public class Dijkstra : ScriptableObject {
 		}
 
 
+
+
 		if (flip) {
 
 			if (lvn > graph[x+1,y]) {
@@ -364,6 +368,32 @@ public class Dijkstra : ScriptableObject {
 				lvn = graph[x,y-1];
 			}   
 
+
+
+
+
+
+			if (lvn > graph[x+1,y+1]) {
+				moveVector = new Vector2(1,1);
+				lvn = graph[x+1,y+1];
+			}	
+
+			if (lvn > graph[x-1,y+1]) {
+				moveVector = new Vector2(-1,1);
+				lvn = graph[x-1,y+1];
+			}	
+
+			if (lvn > graph[x+1,y-1]) {
+				moveVector = new Vector2(1,-1);
+				lvn = graph[x+1,y-1];
+			}
+
+			if (lvn > graph[x-1,y-1]) {
+				moveVector = new Vector2(-1,-1);
+				lvn = graph[x-1,y-1];
+			}   
+
+
 		} else {
 
 			if (lvn > graph[x,y+1]) {
@@ -385,6 +415,28 @@ public class Dijkstra : ScriptableObject {
 				moveVector = new Vector2(-1,0);
 				lvn = graph[x-1,y];
 			}			    
+
+			if (lvn > graph[x+1,y-1]) {
+				moveVector = new Vector2(1,-1);
+				lvn = graph[x+1,y-1];
+			}
+
+			if (lvn > graph[x-1,y-1]) {
+				moveVector = new Vector2(-1,-1);
+				lvn = graph[x-1,y-1];
+			}  
+			if (lvn > graph[x+1,y+1]) {
+				moveVector = new Vector2(1,1);
+				lvn = graph[x+1,y+1];
+			}	
+
+			if (lvn > graph[x-1,y+1]) {
+				moveVector = new Vector2(-1,1);
+				lvn = graph[x-1,y+1];
+			}	
+
+
+
 
 		}
 
