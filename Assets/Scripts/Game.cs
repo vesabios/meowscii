@@ -92,7 +92,7 @@ public class Game : ScreenComponent {
 		PActor player = CreateActor("Human", new Vector3(25,25,0));
 
 
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 15; i++) {
 			PActor kobold = CreateActor("Kobold", new Vector3(35,25,0));
 
 		}

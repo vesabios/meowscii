@@ -6,7 +6,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System;
 
+public class Signal {
 
+}
 
 public interface IActor
 {
@@ -25,6 +27,8 @@ public class PActor : PWorldObject, IActor {
     public List<Guid> inventory;
 
     public List<Ability> startingAbilities;
+
+	public List<Signal> signals;
 
     public SerializableDictionary<PEquipment.Slot, Guid> equipped;
 
@@ -122,13 +126,17 @@ public class PActor : PWorldObject, IActor {
 
 		dijkstra.SetTarget(targetLocation);
 
-		if (!towards ) {
+		if (!towards) {
+			dijkstra.ThreadIterate ();
+			dijkstra.Retreat ();
+			dijkstra.SetObstacle (targetLocation);
+			dijkstra.ThreadIterate(true);
+
+		} else {
 			dijkstra.ThreadIterate();
-			dijkstra.IRetreat();
-			dijkstra.SetObstacle(targetLocation);
+
 		}
 
-		dijkstra.ThreadIterate();
 
 		// re-add the actor obstacles, just in case the target is also an obstacle
 		foreach (PD pd in GameData.data)

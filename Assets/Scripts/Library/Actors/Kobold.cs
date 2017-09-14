@@ -16,20 +16,22 @@ public class Kobold : PActor {
 		Color32 brush = Screen.GenerateBrush();
 		brush.r = (byte)Convert.ToInt32('k');
 		Screen.SetWorldPixelInScreenSpace(location, brush, Screen.Layer.FLOATING);
-		/*
 
-		for (int y = 0; y < 33; y++) {
-			for (int x = 0; x < 60; x++) {
+		if (Input.GetKey (KeyCode.S)) {
+			for (int y = 0; y < 33; y++) {
+				for (int x = 0; x < 60; x++) {
 
-				int u = x + (int)Engine.player.location.x;
-				int v = y + (int)Engine.player.location.y;
+					int u = x + (int)Engine.player.location.x - 10;
+					int v = y + (int)Engine.player.location.y - 10;
 
-				Color32 c = Screen.GenerateBrush (dijkstra.graph [u, v], dijkstra.graph [u, v]);
-				Screen.SetPixel ((uint)x, (uint)y, c, Screen.Layer.FLOATING);
+					Color32 c = Screen.GenerateBrush (dijkstra.graph [u, v], dijkstra.graph [u, v]);
+					Screen.SetPixel ((uint)x, (uint)y, c, Screen.Layer.FLOATING);
 
+				}
 			}
 		}
-		*/
+
+
 
 
 	}

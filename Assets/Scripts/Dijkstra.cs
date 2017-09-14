@@ -100,7 +100,7 @@ public class Dijkstra : ScriptableObject {
 
 	 
 
-	public void ThreadIterate() {
+	public void ThreadIterate(bool thorough = false) {
 
 		bool changed = false;
 
@@ -120,23 +120,36 @@ public class Dijkstra : ScriptableObject {
 		int maxx = -1;
 		int maxy = -1;
 
+		int overscan = -1;
+
 		while (iter<128) {
 
 			changed = false;
 			iter++;
 
-			x0 = Mathf.Max (1, x0);
-			x1 = Mathf.Min ((int)dims.x-1, x1);
 
-			y0 = Mathf.Max (1, y0);
-			y1 = Mathf.Min ((int)dims.y-1, y1);
+
+			if (thorough) {
+				x0 = 1;
+				x1 = (int)dims.x-1;
+
+				y0 = 1;
+				y1 = (int)dims.y-1;
+			} else {
+				x0 = Mathf.Max (1, x0);
+				x1 = Mathf.Min ((int)dims.x-1, x1);
+
+				y0 = Mathf.Max (1, y0);
+				y1 = Mathf.Min ((int)dims.y-1, y1);
+			}
+
 
 			for (int y = y0; y<y1; y++) {
 				for (int x = x0; x<x1; x++) {
 
 					v =  graph[x,y];
 
-					if ( v < OMIT_VALUE && v>iter) {
+					if ( v < OMIT_VALUE ) {
 
 						lvn = IntMin(v, graph[x-1,y]);
 						lvn = IntMin(lvn, graph[x,y-1]);
@@ -155,16 +168,21 @@ public class Dijkstra : ScriptableObject {
 							maxx = Mathf.Max (x + 2, maxx);
 							maxy = Mathf.Max (y + 2, maxy);
 
-							if (new Vector2 (x, y) == origin) {
-								return;
+							if (x == origin.x && y == origin.y) {
+								overscan = 2;
 							}
+
+
 
 							changed = true;
 						}
 					}
-
 				}
 			}
+
+			overscan--;
+			if (overscan == 0)
+				return;
 
 			if (!changed) {
 				return;
@@ -239,22 +257,23 @@ public class Dijkstra : ScriptableObject {
 
 	//------------------------------------------------------------------------
 
-	public IEnumerator IRetreat() {
+	public void Retreat() {
 
 		for (int y = 0; y<dims.y; y++) {
 			for (int x = 0; x<dims.x; x++) {
 				if ((y<2)||(y>dims.y-2)||(x<2)||(x>dims.x-2)) {
+					
 					graph[x,y] = OMIT_VALUE;
+
 				} else {
 					int v = graph[x,y];
-					if ( v < OMIT_VALUE-1) {
+					if ( v < OMIT_VALUE-1 ) {
 						graph[x,y] = ((v*-6)/5);
 					}
 				}
 			}
 		}
 
-		yield return null;
 
 	}
 

@@ -21,6 +21,12 @@ namespace ActorHSM
 
 	}
 
+	class SpottedActorSignal : Signal {
+
+		public PActor target;
+
+	}
+
 	class StateData
 	{
 		public Attribute<int> focus = new Attribute<int>(0);
@@ -29,12 +35,14 @@ namespace ActorHSM
 	};
 
 	class ActorState : ActorStateBase {
+
+		List<Signal> signals;
+
+		protected void CheckSignals() {
+			//Owner.signals;
+		}
 		
 		protected void GetNewWaypoint() {
-
-
-			SetAttribute (Data.waypoint, Engine.player.location);
-			return;
 
 			// for now we will find a random location in the game
 
@@ -65,8 +73,12 @@ namespace ActorHSM
 		}
 
 
-		protected float DistanceRemaining() {
+		protected float DistanceSqrRemaining() {
 			return ((Owner.location - Data.waypoint.Value).sqrMagnitude);
+		}
+
+		protected float DistanceRemaining() {
+			return ((Owner.location - Data.waypoint.Value).magnitude);
 		}
 
 		protected bool HasWaypoint() {
@@ -136,12 +148,12 @@ namespace ActorHSM
 
 		public override Transition EvaluateTransitions()
 		{
+			CheckSignals ();
+
+			// if we get a signal
+
 			return Transition.InnerEntry<PatrolWalking>();
 		}
-
-
-
-
 	}
 
 
@@ -159,11 +171,17 @@ namespace ActorHSM
 
 			if (HasWaypoint ()) { 
 
-				if (DistanceRemaining () > 0) {
+				float distance = DistanceRemaining ();
+
+				if (distance > 0) {
 					SetAttribute (Data.waypoint, Engine.player.location);
 
-					Owner.MoveTowardsLocation (Data.waypoint.Value);
+					if (distance < 6) {
+						Owner.MoveTowardsLocation (Data.waypoint.Value, false);
 
+					} else if (distance > 10) {
+						Owner.MoveTowardsLocation (Data.waypoint.Value, true);
+					}
 
 				}
 			}
@@ -173,7 +191,7 @@ namespace ActorHSM
 		public override Transition EvaluateTransitions ()
 		{
 			if (HasWaypoint ()) { 
-				if (DistanceRemaining () < 1 || Data.focus.Value ==0)
+				if (DistanceSqrRemaining () < 1 || Data.focus.Value ==0)
 				{
 					return Transition.Sibling<PatrolLookAround> ();
 				}
@@ -200,6 +218,7 @@ namespace ActorHSM
 
 	}
 
+
 	class Suspicious : ActorState
 	{
 		public override void OnEnter()
@@ -212,6 +231,7 @@ namespace ActorHSM
 			return Transition.None ();
 		}
 	}
+
 
 	class Hostile : ActorState
 	{
