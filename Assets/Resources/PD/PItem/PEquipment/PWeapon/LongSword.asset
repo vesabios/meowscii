@@ -11,8 +11,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eda8fe0aae75b7d4fbed96c3965325b4, type: 3}
   m_Name: LongSword
   m_EditorClassIdentifier: 
+  location:
+    x: 0
+    y: 0
+    z: 0
   shortDisplayName: Longsword
   description: 
+  dims:
+    x: 1
+    y: 1
+    z: 1
   inscription: 
   weight: 4
   cost: 15

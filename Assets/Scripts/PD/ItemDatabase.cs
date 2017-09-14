@@ -48,6 +48,7 @@ public class ItemDatabase  {
 	}
 
 	public static void AddItem(PItem item) {
+		ValidateDatabase ();
 		items.Add (item);
 	}
 

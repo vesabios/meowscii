@@ -112,8 +112,20 @@ public class Engine : MonoBehaviour {
     {
         SetMode(Mode.TURN);
 
-        // update all actors and other game things
+		Dijkstra.PrepareBaseGraph ();
 
+        // update all actors and other game things
+		foreach (PD pd in GameData.data)
+		{
+			if (pd is PActor)
+			{
+				PActor actor = (PActor)pd;
+				if (actor.zoneID == World.currentZone.guid) {
+					actor.Tick ();
+					//yield return null;
+				}
+			}
+		}
 
         yield return new WaitForSeconds(turnDelay);
         SetMode(Mode.GAMEPLAY);

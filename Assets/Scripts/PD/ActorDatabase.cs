@@ -53,6 +53,13 @@ public class ActorDatabase  {
 		return null;
 	}
 
+
+	public static void AddActor(PActor actor) {
+		ValidateDatabase ();
+
+		actors.Add (actor);
+	}
+
 	static public List<PActor> GetAllActors() {
 		ValidateDatabase();
 		return actors;

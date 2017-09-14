@@ -37,8 +37,8 @@ public class Landscape : MonoBehaviour {
 
     static uint CreateBufferIndex(Vector2 location)
     {
-		float x = Mathf.Clamp (location.x, 0, dims.x);
-		float y = Mathf.Clamp (location.y, 0, dims.y);
+		float x = Mathf.Clamp (location.x, 0, dims.x-1);
+		float y = Mathf.Clamp (location.y, 0, dims.y-1);
 		return CreateBufferIndex((uint)x, (uint)y);
     }
 
@@ -100,6 +100,7 @@ public class Landscape : MonoBehaviour {
         Initialize();
 
         byte[] fileData;
+		Debug.Log ("trying to load texture: " + filePath);
         if (File.Exists(Application.dataPath + "/Resources/Atlas/" + filePath))
         {
             Debug.Log("found " + Application.dataPath + "/Resources/Atlas/" + filePath);

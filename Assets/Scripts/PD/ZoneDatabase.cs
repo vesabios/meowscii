@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class PZoneDatabase  {
+public class ZoneDatabase  {
 
 
 	static private List<PZone> zones;
@@ -46,6 +46,12 @@ public class PZoneDatabase  {
 			}
 		}
 		return null;
+	}
+
+	static public void AddZone(PZone zone) {
+		ValidateDatabase ();
+
+		zones.Add (zone);
 	}
 
 	static public List<PZone> GetAllZones() {

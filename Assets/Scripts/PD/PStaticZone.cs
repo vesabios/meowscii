@@ -11,4 +11,12 @@ public class PStaticZone : PZone {
 
     }
 
+	public static PStaticZone CreateInstance(string newName)
+	{
+		var zone = ScriptableObject.CreateInstance<PStaticZone>();
+		zone.name = newName;
+		return zone;
+	}
+
+
 }

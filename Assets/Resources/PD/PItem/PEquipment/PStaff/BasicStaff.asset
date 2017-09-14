@@ -11,8 +11,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa4f2cef0a11c1d4487bafd55d21ef4a, type: 3}
   m_Name: BasicStaff
   m_EditorClassIdentifier: 
+  location:
+    x: 0
+    y: 0
+    z: 0
   shortDisplayName: Staff
   description: 
+  dims:
+    x: 1
+    y: 1
+    z: 1
   inscription: 
   weight: 5
   cost: 0

@@ -14,7 +14,10 @@ public class PD : ScriptableObject {
    
     public PD() {
 		guid = System.Guid.NewGuid();
+
 	}
+
+
 
     public void PrepareForWrite() {
         ISerializationRefs();

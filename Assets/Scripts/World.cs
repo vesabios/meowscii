@@ -46,13 +46,12 @@ public class World : MonoBehaviour {
     {
         // create a new world from scratch and save it to disk
 
-        PZone zone = PZoneDatabase.GetZone("TestAlpha");
+        PZone zone = ZoneDatabase.GetZone("Home");
         if (zone == null) Debug.Log("ZONE NOT FOUND");
         GameData.AddPZone(zone);
 
         LoadZone(zone);
 
-        LoadZoneData();
         
 
     }
@@ -78,6 +77,9 @@ public class World : MonoBehaviour {
         //localObjects = GameData.GetObjectsInZone(newZone.guid);
         lastZone = currentZone;
         currentZone = newZone;
+
+		LoadZoneData();
+
 
     }
 

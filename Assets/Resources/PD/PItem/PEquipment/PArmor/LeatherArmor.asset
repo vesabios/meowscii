@@ -11,8 +11,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e736e2fd66212e4b82925d99632c236, type: 3}
   m_Name: LeatherArmor
   m_EditorClassIdentifier: 
+  location:
+    x: 0
+    y: 0
+    z: 0
   shortDisplayName: Leather Armor
   description: 
+  dims:
+    x: 1
+    y: 1
+    z: 1
   inscription: 
   weight: 10
   cost: 15
