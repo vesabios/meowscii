@@ -55,9 +55,9 @@ public class Game : ScreenComponent {
     {
         instance = this;
 
-		gameObject.AddComponent<ObjectLibrary> ();
-		gameObject.AddComponent<ActorLibrary> ();
-		gameObject.AddComponent<ZoneLibrary> ();
+		ObjectLibrary.Init ();
+		ActorLibrary.Init();
+		ZoneLibrary.Init();
 
     }
 
@@ -78,6 +78,7 @@ public class Game : ScreenComponent {
 	public static PActor CreateActor(string name, Vector3 location) {
 
 		PActor a = ActorDatabase.GetActor(name);
+		Debug.Log ("getting actor: " + name);
 		a.location = location;
 		GameData.AddPActor(a);
 		a.zoneID = World.currentZone.guid;
@@ -93,7 +94,7 @@ public class Game : ScreenComponent {
 
 
 		for (int i = 0; i < 15; i++) {
-			PActor kobold = CreateActor("Kobold", new Vector3(35,25,0));
+			CreateActor("Kobold", new Vector3(35,25,0));
 
 		}
 

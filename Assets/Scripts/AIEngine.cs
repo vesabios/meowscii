@@ -41,8 +41,20 @@ namespace ActorHSM
 		protected void CheckSignals() {
 			//Owner.signals;
 		}
+
+		protected int GetMinDesiredDistanceFromTarget() {
+			return 6;
+		}
+
+		protected int GetMaxDesiredDistanceFromTarget() {
+			return 10;
+		}
+
+		protected int GetNewWaypointSearchRadius() {
+			return 40;
+		}
 		
-		protected void GetNewWaypoint() {
+		protected void GetNewRandomWaypoint() {
 
 			// for now we will find a random location in the game
 
@@ -56,14 +68,11 @@ namespace ActorHSM
 
 				Vector2 c = Random.insideUnitCircle;
 
-				int x = Random.Range (1, (int)Landscape.dims.x);
-				int y = Random.Range (1, (int)Landscape.dims.y);
-
-				newLocation = (Vector2)(Vector3)Owner.location + c * 40;
+				newLocation = Owner.location + c * GetNewWaypointSearchRadius();
 
 				canOccupyNewLocation = Game.CanActorOccupyLocation (Owner, newLocation);
 
-				if (failsafe++ > 1000)
+				if (failsafe++ > 100)
 					return;
 
 			}
@@ -140,7 +149,7 @@ namespace ActorHSM
 
 		}
 
-		public override void PerformStateActions(float aDeltaTime)
+		public override void PerformStateActions(int actionPoints)
 		{
 			SetAttribute (Data.focus, Data.focus.Value - 1);
 
@@ -160,12 +169,12 @@ namespace ActorHSM
 	class PatrolWalking : ActorState {
 		public override void OnEnter()
 		{
-			GetNewWaypoint ();
+			GetNewRandomWaypoint ();
 			SetAttribute (Data.focus, 120);
 
 		}
 
-		public override void PerformStateActions(float aDeltaTime)
+		public override void PerformStateActions(int actionPoints)
 		{
 			// do we have a target?
 
@@ -176,10 +185,10 @@ namespace ActorHSM
 				if (distance > 0) {
 					SetAttribute (Data.waypoint, Engine.player.location);
 
-					if (distance < 6) {
+					if (distance < GetMinDesiredDistanceFromTarget()) {
 						Owner.MoveTowardsLocation (Data.waypoint.Value, false);
 
-					} else if (distance > 10) {
+					} else if (distance > GetMaxDesiredDistanceFromTarget()) {
 						Owner.MoveTowardsLocation (Data.waypoint.Value, true);
 					}
 

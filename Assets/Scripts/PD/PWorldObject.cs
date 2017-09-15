@@ -23,4 +23,17 @@ public class PWorldObject : PD {
 
     public virtual void Draw() { }
 
+	protected bool IsVectorDiagonal(Vector2 v) {
+		return (Mathf.Abs (v.x) + Mathf.Abs (v.y) > 1);
+	}
+
+	protected virtual bool IsMotile() {
+		return false;
+	}
+
+	public virtual void Tick(int actionPoints) {
+
+
+	}
+
 }

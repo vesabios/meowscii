@@ -28,8 +28,8 @@ public class PlayerInputFrame : InputFrame {
 
             if (moveVector.magnitude > 0)
             {
-                Engine.player.TryMoving(moveVector);
-                Engine.ProcessTurn();
+                int actionPointsSpent = Engine.player.TryMoving(moveVector);
+				Engine.ProcessTurn(actionPointsSpent);
             }
 
         }

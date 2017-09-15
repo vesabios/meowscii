@@ -10,7 +10,11 @@ public class Kobold : PActor {
 	{
 		base.Init ();
 
+		baseMovementCost = 90;
+		baseActionCost = 40;
+
 	}
+		
 
 	public override void Draw() {
 		Color32 brush = Screen.GenerateBrush();

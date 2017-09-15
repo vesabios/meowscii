@@ -20,8 +20,10 @@ public class PActor : PWorldObject, IActor {
 
 	public PActor Reference { get { return this; } }
 
+    protected int baseMovementCost; // how many action points does it cost to move 1 square
+	protected int baseActionCost; // how many action points does it take to use a full action
 
-    public int speed;
+	protected int actionPoints;
 
     public List<PItem> startingInventory;
     public List<Guid> inventory;
@@ -37,8 +39,10 @@ public class PActor : PWorldObject, IActor {
 	Hsm.StateMachine stateMachine;
 
 	void OnEnable() {
-		name = this.GetType ().ToString ();
-		Debug.Log (">>>>" + name);
+		name = this.GetType ().ToString (); // SUPER FUCKING IMPORTANT, DO NOT REMOVE
+
+		dijkstra = (Dijkstra)ScriptableObject.CreateInstance("Dijkstra") as Dijkstra;
+
 	}
 
     
@@ -47,23 +51,26 @@ public class PActor : PWorldObject, IActor {
     {
         base.Init();
 
-		dijkstra = (Dijkstra)ScriptableObject.CreateInstance("Dijkstra") as Dijkstra;
 
 		stateMachine = new Hsm.StateMachine();
 		stateMachine.Init<ActorHSM.Root>(this, new ActorHSM.StateData());
 		//stateMachine.DebugLogLevel = 2;
 
-        if (inventory==null)
+		if (inventory==null)
         {
             inventory = new List<Guid>();
-            foreach (PItem item in startingInventory)
-            {
-                if (item != null)
-                {
-                    GameData.data.Add(ItemDatabase.GetItem(item.name));
-                    inventory.Add(item.guid);
-                }
-            }
+
+			if (startingInventory != null) {
+				foreach (PItem item in startingInventory)
+				{
+					if (item != null)
+					{
+						GameData.data.Add(ItemDatabase.GetItem(item.name));
+						inventory.Add(item.guid);
+					}
+				}
+
+			}
         }
     }
 
@@ -72,33 +79,71 @@ public class PActor : PWorldObject, IActor {
         Color32 brush = Screen.GenerateBrush();
         brush.r = (byte)Convert.ToInt32('@');
         Screen.SetWorldPixelInScreenSpace(location, brush, Screen.Layer.FLOATING);
-
     }
 
-    public virtual bool TryMoving(Vector3 v)
+	public virtual int GetMovementCost() {
+		return baseMovementCost;
+	}
+
+	public virtual int GetActionCost() {
+		return baseActionCost;
+	}
+
+	public virtual int GetAvailableActionPoints() {
+		return actionPoints;
+	}
+
+	protected override bool IsMotile() {
+		return (GetAvailableActionPoints() > GetMovementCost());
+	}
+		
+	public virtual int TryMoving(Vector3 v) // returns actionpoints spent
     {
+		if (!IsMotile ())
+			return 0;
+
+
+		int ap = GetMovementCost ();
+
         v.y *= -1;
 
-		Vector2 loc = (Vector2)(Vector3)location;
+		Vector2 loc = location;
 
 		Vector2 vertical = new Vector2 (v.y, 0);
 		Vector2 horizontal = new Vector2 (0, v.x);
 
-		if (Game.CanActorOccupyLocation(this, loc+(Vector2)v))
-        {
-            location.y += v.y;
-            location.x += v.x;
-        } 
-		else if (Game.CanActorOccupyLocation(this, loc + horizontal))
-        {
-            location.x += horizontal.x;
-        }
-        else if (Game.CanActorOccupyLocation(this, loc + vertical))
-        {
-            location.y += vertical.y;
-        }
+		Vector2 initialLocation = location;
 
-        return true;
+		Vector2 newLocation = location;
+
+		if (Game.CanActorOccupyLocation (this, loc + (Vector2)v)) {
+			newLocation.y += v.y;
+			newLocation.x += v.x;
+		} else if (Game.CanActorOccupyLocation (this, loc + horizontal)) {
+			newLocation.x += horizontal.x;
+		} else if (Game.CanActorOccupyLocation (this, loc + vertical)) {
+			newLocation.y += vertical.y;
+		} else {
+			return 0;
+		}
+
+
+		Vector2 actualMoveVector = newLocation - initialLocation;
+
+		if (IsVectorDiagonal (actualMoveVector)) {
+			ap = Mathf.RoundToInt(ap * 1.4f); // hardcoded magic number for diagonal 
+		}
+
+
+		if (ap <= GetAvailableActionPoints()) {
+			location = newLocation;
+			actionPoints -= ap;
+			return ap;
+		}
+
+		return 0;
+
+
     }
 
 
@@ -114,7 +159,7 @@ public class PActor : PWorldObject, IActor {
 				PActor a = (PActor)pd;
 				if (a.zoneID == World.currentZone.guid) {
 					if (pd != this) {
-						if (Vector3.Distance (location, a.location) < 5) {
+						if (Vector2.Distance (location, a.location) < 2) {
 							dijkstra.SetObstacle (a.location);
 						}
 					}
@@ -122,22 +167,23 @@ public class PActor : PWorldObject, IActor {
 			}
 		}
 
-		dijkstra.SetOrigin (location);
+		dijkstra.SetOrigin (location); // this is where the actor will be moving FROM
 
-		dijkstra.SetTarget(targetLocation);
+		dijkstra.SetTarget(targetLocation); // this is where the actor will be trying to move TO
 
 		if (!towards) {
 			dijkstra.ThreadIterate ();
 			dijkstra.Retreat ();
 			dijkstra.SetObstacle (targetLocation);
-			dijkstra.ThreadIterate(true);
+			dijkstra.ThreadIterate(true); // set true to indicate moving AWAY
 
 		} else {
+			
 			dijkstra.ThreadIterate();
 
 		}
 
-
+		/*
 		// re-add the actor obstacles, just in case the target is also an obstacle
 		foreach (PD pd in GameData.data)
 		{
@@ -151,6 +197,7 @@ public class PActor : PWorldObject, IActor {
 				}
 			}
 		}
+		*/
 
 
 		//bool traversable = dijkstra.IsTraversable(targetLocation);
@@ -172,15 +219,12 @@ public class PActor : PWorldObject, IActor {
 	}
 
 
-	public void Tick() {
 
-		if (Engine.player == this)
-			return;
+	public override void Tick(int ap) {
 
-		stateMachine.Update (Time.deltaTime);
-
+		actionPoints += ap;
+		stateMachine.Update (0);
 	}
-
 
 }
 

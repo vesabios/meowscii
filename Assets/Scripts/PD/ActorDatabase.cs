@@ -39,8 +39,8 @@ public class ActorDatabase  {
 
 	static public PActor GetActor(string name) {
 		ValidateDatabase();
-		foreach (PActor i in actors) {
 
+		foreach (PActor i in actors) {
 			if (i.name == name) {
 				var o = ScriptableObject.Instantiate(i) as PActor;
 				o.name = i.name;
@@ -56,6 +56,10 @@ public class ActorDatabase  {
 
 	public static void AddActor(PActor actor) {
 		ValidateDatabase ();
+
+		Debug.Log (actor.ToString ());
+
+		Debug.Log ("adding actor " + actor + ", name is: " + actor.name);
 
 		actors.Add (actor);
 	}

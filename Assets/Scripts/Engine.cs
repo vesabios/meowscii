@@ -103,12 +103,12 @@ public class Engine : MonoBehaviour {
         return true;
     }
 
-    public static void ProcessTurn()
+	public static void ProcessTurn(int actionPoints)
     {
-        instance.StartCoroutine(instance.IProcessTurn());
+        instance.StartCoroutine(instance.IProcessTurn(actionPoints));
     }
 
-    IEnumerator IProcessTurn()
+	IEnumerator IProcessTurn(int actionPoints)
     {
         SetMode(Mode.TURN);
 
@@ -121,7 +121,7 @@ public class Engine : MonoBehaviour {
 			{
 				PActor actor = (PActor)pd;
 				if (actor.zoneID == World.currentZone.guid) {
-					actor.Tick ();
+					actor.Tick (actionPoints);
 					//yield return null;
 				}
 			}

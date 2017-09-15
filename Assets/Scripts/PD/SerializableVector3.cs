@@ -53,6 +53,10 @@ public struct SerializableVector3 {
         return new Vector3(rValue.x, rValue.y, rValue.z);
     }
 
+	public static implicit operator Vector2(SerializableVector3 rValue) {
+		return new Vector2(rValue.x, rValue.y);
+	}
+
     /// <summary>
     /// Automatic conversion from Vector3 to SerializableVector3
     /// </summary>
@@ -61,4 +65,9 @@ public struct SerializableVector3 {
     public static implicit operator SerializableVector3(Vector3 rValue) {
         return new SerializableVector3(rValue.x, rValue.y, rValue.z);
     }
+
+	public static implicit operator SerializableVector3(Vector2 rValue) {
+		return new SerializableVector3(rValue.x, rValue.y, 0);
+	}
+
 }

@@ -5,11 +5,12 @@ using UnityEngine;
 
 
 
-public class ActorLibrary : MonoBehaviour {
+public static class ActorLibrary  {
 
-	void Awake () {
+	public static void Init () {
 		ActorDatabase.AddActor ((PActor)ScriptableObject.CreateInstance("Kobold"));
 		ActorDatabase.AddActor ((PActor)ScriptableObject.CreateInstance("Human"));
+		Debug.Log ("ADDED ACTOR LIBRARY ACTORS");
 
 	}
 
@@ -17,9 +18,9 @@ public class ActorLibrary : MonoBehaviour {
 
 
 
-public class ZoneLibrary : MonoBehaviour {
+public static class ZoneLibrary  {
 
-	void Awake() {
+	public static void Init() {
 		ZoneDatabase.AddZone (PStaticZone.CreateInstance("Home"));
 
 	}
@@ -27,10 +28,10 @@ public class ZoneLibrary : MonoBehaviour {
 
 }
 
-public class ObjectLibrary : MonoBehaviour {
+public static class ObjectLibrary  {
 
 	// Use this for initialization
-	void Awake () {
+	public static void Init () {
 
 
 		PItem pi = new PWand () {

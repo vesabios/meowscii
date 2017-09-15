@@ -93,7 +93,7 @@ Shader "Screen" {
 				fixed4 fg = fromPalette(buf.g);
 				fixed4 bg = fromPalette(buf.b);
 
-				int character = int(buf.r * 255.0f);
+				int character = int(buf.r * 256.0f);
 
 
 				float2 cursorTest = i.texcoord * _Dims.xy;

@@ -42,7 +42,7 @@ namespace Hsm
 		public virtual void OnEnter(object[] aArgs) { }
 		public virtual void OnExit() { }
 		public virtual Transition EvaluateTransitions() { return Transition.None(); }
-		public virtual void PerformStateActions(float aDeltaTime) { }
+		public virtual void PerformStateActions(int actionPoints) { }
 
 		///////////////////////////////
 		// Accessors
@@ -287,10 +287,10 @@ namespace Hsm
 			return mStateStack.Count > 0; // Always has at least one state on the stack if started
 		}
 
-		public void Update(float aDeltaTime)
+		public void Update(int actionPoints)
 		{
 			EvaluateStateTransitions();
-			PerformStateActions(aDeltaTime);
+			PerformStateActions(actionPoints);
 		}
 
 		public void EvaluateStateTransitions()
@@ -312,11 +312,11 @@ namespace Hsm
 			}
 		}
 
-		public void PerformStateActions(float aDeltaTime)
+		public void PerformStateActions(int actionPoints)
 		{
 			foreach (State state in mStateStack)
 			{
-				state.PerformStateActions(aDeltaTime);
+				state.PerformStateActions(actionPoints);
 			}
 		}
 

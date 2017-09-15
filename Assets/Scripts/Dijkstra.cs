@@ -122,12 +122,10 @@ public class Dijkstra : ScriptableObject {
 
 		int overscan = -1;
 
-		while (iter<128) {
+		while (iter<64) {
 
 			changed = false;
 			iter++;
-
-
 
 			if (thorough) {
 				x0 = 1;
@@ -172,8 +170,6 @@ public class Dijkstra : ScriptableObject {
 								overscan = 2;
 							}
 
-
-
 							changed = true;
 						}
 					}
@@ -201,8 +197,8 @@ public class Dijkstra : ScriptableObject {
 		int x = (int)l.x;
 		int y = (int)l.y;
 
-
 		int v =  graph[x, y];
+
 		if ( v < OMIT_VALUE) {    	
 			graph[x, y] += 1;
 		}
