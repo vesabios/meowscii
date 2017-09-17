@@ -21,7 +21,7 @@
 - remove inscription (equipment)
 - activate (activatable equipment)
 - browse (book)
-- quaff (potion)
+- drink (potion)
 - read (scroll)
 - eat (food)
 - inspect

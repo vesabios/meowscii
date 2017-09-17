@@ -56,6 +56,44 @@ public class World : MonoBehaviour {
 
     }
 
+
+	public static PWorldObject GetObjectAt (Vector2 location) {
+
+		foreach (PD pd in staticObjects)
+		{
+			if (pd is PWorldObject)
+			{
+				PWorldObject worldObject = (PWorldObject)pd;
+				if (worldObject.zoneID == currentZone.guid) {
+					if (worldObject.location == location)
+						return worldObject;
+				}
+					
+			}
+		}
+
+		// draw objects
+
+		foreach (PD pd in GameData.data)
+		{
+			if (pd is PWorldObject)
+			{
+				PWorldObject worldObject = (PWorldObject)pd;
+				if (worldObject.zoneID == currentZone.guid) {
+					Debug.Log (worldObject.name+": "+worldObject.location);
+
+					if (worldObject.location == location)
+						return worldObject;
+				}
+			}
+		}
+
+		return null;
+
+
+	}
+
+
     public static void AddWorldObject(PWorldObject worldObject)
     {
         worldObject.zoneID = currentZone.guid;
@@ -129,6 +167,7 @@ public class World : MonoBehaviour {
                     ((PWorldObject)pd).Draw();
             }
         }
+
         // draw vfx
 
     }
@@ -142,6 +181,8 @@ public class World : MonoBehaviour {
     static void CalculateView()
     {
 
+		Rect oldView = view;
+
 		switch (viewMode) {
 		case ViewMode.WORLD_OBJECT:
 			{
@@ -149,6 +190,11 @@ public class World : MonoBehaviour {
 				break;
 			}
 		}
+
+		if (view == oldView)
+			return;
+
+
 
     }
 
@@ -187,6 +233,35 @@ public class World : MonoBehaviour {
 	static void ClampView() {
 		view.x = Mathf.Clamp(view.x, 0, Landscape.dims.x - Screen.dims.x);
 		view.y = Mathf.Clamp(view.y, 0, Landscape.dims.y - Screen.dims.y);
+	}
+
+	public static List<PWorldObject> GetWorldObjectsInZone() {
+
+		List<PWorldObject> results = new List<PWorldObject> ();
+
+		foreach (PD pd in GameData.data)
+		{
+			if (pd is PWorldObject)
+			{
+				PWorldObject worldObject = (PWorldObject)pd;
+				if (worldObject.zoneID == currentZone.guid)
+					results.Add (worldObject);
+			}
+		}
+
+		return results;
+	}
+
+	public static List<PWorldObject> GetVisibleObjects() {
+
+		List<PWorldObject> zoneObjects = GetWorldObjectsInZone ();
+
+		zoneObjects.Remove (Engine.player);
+
+		return zoneObjects;
+
+
+
 	}
 
 }

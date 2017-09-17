@@ -10,6 +10,7 @@ public class Human : PActor {
 
 		baseMovementCost = 30;
 		baseActionCost = 40;
+		baseAttackCost = 30;
 
 	}
 

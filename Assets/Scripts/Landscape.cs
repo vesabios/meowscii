@@ -27,12 +27,12 @@ public class Landscape : MonoBehaviour {
     public static void LoadStaticZone(string n)
     {
         zoneName = n;
-        LoadTexture(zoneName + ".png");
+        LoadTexture(zoneName + ".pix");
     }
 
     public static void SaveStaticZone()
     {
-        SaveTexture(zoneName + ".png");
+        SaveTexture(zoneName + ".pix");
     }
 
     static uint CreateBufferIndex(Vector2 location)

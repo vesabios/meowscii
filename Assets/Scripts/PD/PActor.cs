@@ -22,6 +22,7 @@ public class PActor : PWorldObject, IActor {
 
     protected int baseMovementCost; // how many action points does it cost to move 1 square
 	protected int baseActionCost; // how many action points does it take to use a full action
+	protected int baseAttackCost;
 
 	protected int actionPoints;
 
@@ -89,6 +90,10 @@ public class PActor : PWorldObject, IActor {
 		return baseActionCost;
 	}
 
+	public virtual int GetAttackCost() {
+		return baseAttackCost;
+	}
+
 	public virtual int GetAvailableActionPoints() {
 		return actionPoints;
 	}
@@ -104,8 +109,6 @@ public class PActor : PWorldObject, IActor {
 
 
 		int ap = GetMovementCost ();
-
-        v.y *= -1;
 
 		Vector2 loc = location;
 
@@ -134,8 +137,7 @@ public class PActor : PWorldObject, IActor {
 			ap = Mathf.RoundToInt(ap * 1.4f); // hardcoded magic number for diagonal 
 		}
 
-
-		if (ap <= GetAvailableActionPoints()) {
+		if (GetAvailableActionPoints() >= 0) {
 			location = newLocation;
 			actionPoints -= ap;
 			return ap;
@@ -183,7 +185,7 @@ public class PActor : PWorldObject, IActor {
 
 		}
 
-		/*
+
 		// re-add the actor obstacles, just in case the target is also an obstacle
 		foreach (PD pd in GameData.data)
 		{
@@ -197,7 +199,7 @@ public class PActor : PWorldObject, IActor {
 				}
 			}
 		}
-		*/
+
 
 
 		//bool traversable = dijkstra.IsTraversable(targetLocation);
@@ -206,22 +208,21 @@ public class PActor : PWorldObject, IActor {
 
 		Vector2 moveVector = dijkstra.GetMoveVector (location);
 
-		moveVector.y *= -1;
-
 		TryMoving(moveVector);
 
 		//}
 
+	}
 
 
-
-
+	public int Attack(PActor actor) {
+		Debug.Log ("attacking " + actor);
+		return GetAttackCost ();
 	}
 
 
 
 	public override void Tick(int ap) {
-
 		actionPoints += ap;
 		stateMachine.Update (0);
 	}

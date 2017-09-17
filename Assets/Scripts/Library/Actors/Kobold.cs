@@ -12,6 +12,8 @@ public class Kobold : PActor {
 
 		baseMovementCost = 90;
 		baseActionCost = 40;
+		baseAttackCost = 30;
+
 
 	}
 		

@@ -26,11 +26,12 @@ public class PlayerInputFrame : InputFrame {
 
             if (!Engine.IsReady()) return;
 
-            if (moveVector.magnitude > 0)
-            {
-                int actionPointsSpent = Engine.player.TryMoving(moveVector);
-				Engine.ProcessTurn(actionPointsSpent);
-            }
+			if (moveVector.magnitude == 0)
+				return;
+
+
+			Player.HandleMovementInput (moveVector);
+
 
         }
 
@@ -41,8 +42,8 @@ public class PlayerInputFrame : InputFrame {
     public override void CheckKeyboard()
     {
 
-        if (Input.GetKeyDown(KeyCode.UpArrow)) { moveVector.y = 1; }
-        if (Input.GetKeyDown(KeyCode.DownArrow)) { moveVector.y = -1; }
+        if (Input.GetKeyDown(KeyCode.UpArrow)) { moveVector.y = -1; }
+        if (Input.GetKeyDown(KeyCode.DownArrow)) { moveVector.y = 1; }
         if (Input.GetKeyUp(KeyCode.UpArrow)) { moveVector.y = 0; }
         if (Input.GetKeyUp(KeyCode.DownArrow)) { moveVector.y = 0; }
         if (Input.GetKeyDown(KeyCode.LeftArrow)) { moveVector.x = -1; }
@@ -54,9 +55,12 @@ public class PlayerInputFrame : InputFrame {
         if (Input.GetKeyDown(KeyCode.F1)) { Painter.Activate(); }
         if (Input.GetKeyDown(KeyCode.F2)) { ObjectEditor.Activate(); }
 
+
+		if (Input.GetKeyDown(KeyCode.Tab)) { Inspector.CycleTargets (); }
+
+
         if (Input.GetKeyDown(KeyCode.Backspace)) { }
         if (Input.GetKeyDown(KeyCode.Delete)) { }
-        if (Input.GetKeyDown(KeyCode.Tab)) { }
         if (Input.GetKeyDown(KeyCode.Return)) { }
         if (Input.GetKeyDown(KeyCode.Pause)) { }
         if (Input.GetKeyDown(KeyCode.Escape)) { }

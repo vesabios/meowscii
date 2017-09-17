@@ -49,8 +49,6 @@ public class Game : ScreenComponent {
     }
 
 
-    public static int WORLD_DIM = 256;
-
     void Awake()
     {
         instance = this;
@@ -93,10 +91,10 @@ public class Game : ScreenComponent {
 		PActor player = CreateActor("Human", new Vector3(25,25,0));
 
 
-		for (int i = 0; i < 15; i++) {
+		//for (int i = 0; i < 15; i++) {
 			CreateActor("Kobold", new Vector3(35,25,0));
 
-		}
+		//}
 
         Engine.player = player;
 
@@ -123,6 +121,8 @@ public class Game : ScreenComponent {
     public override void ScreenUpdate()
     {
         World.Draw();
+
+		Inspector.Draw ();
 
 		OnUpdatePointer ();
 
