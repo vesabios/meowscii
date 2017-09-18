@@ -237,6 +237,11 @@ public class Screen : MonoBehaviour
     }
 
 
+	public static Vector2 GetWorldPixelInScreenSpace(Vector3 location) {
+		return (Vector2)location - World.view.position;
+
+	}
+
     public static void SetWorldPixelInScreenSpace(Vector3 location, Color32 brush, Layer layer = Layer.BASE) {
         SetPixel((Vector2)location - World.view.position, brush, layer);
 

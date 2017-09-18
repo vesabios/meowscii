@@ -32,11 +32,14 @@ namespace ActorHSM
 		public Attribute<int> focus = new Attribute<int>(0);
 		public Attribute<Vector3> waypoint = new Attribute<Vector3>(Vector3.zero);
 
+
+
 	};
 
 	class ActorState : ActorStateBase {
 
 		List<Signal> signals;
+
 
 		protected void CheckSignals() {
 			//Owner.signals;
@@ -53,10 +56,27 @@ namespace ActorHSM
 		protected int GetNewWaypointSearchRadius() {
 			return 40;
 		}
+
+		protected void LookForTarget() {
+
+			PActor actor = Owner.LookForTarget ();
+
+			if (actor == null) {
+				Owner.targetActor = System.Guid.Empty;
+			} else {
+				Debug.Log ("found new target: " + actor);
+				Owner.targetActor = actor.guid;
+			}
+
+
+
+		}
 		
 		protected void GetNewRandomWaypoint() {
 
 			// for now we will find a random location in the game
+
+
 
 			bool canOccupyNewLocation = false;
 
@@ -108,7 +128,7 @@ namespace ActorHSM
 
 		public override Transition EvaluateTransitions()
 		{
-			return Transition.InnerEntry<Passive>();
+			return Transition.InnerEntry<Alive>();
 		}
 	}
 
@@ -116,13 +136,31 @@ namespace ActorHSM
 		
 		public override Transition EvaluateTransitions()
 		{
+			if (!Owner.IsAlive ()) {
+				return Transition.Sibling<Dead>();
+			}
+			
 			return Transition.InnerEntry<Conscious>();
 		}
 	}
 
+	class Dead : ActorState {
+
+		public override Transition EvaluateTransitions()
+		{
+			return Transition.None ();
+		}
+	}
+
+
 	class Conscious : ActorState {
 		public override Transition EvaluateTransitions()
 		{
+			if (Owner.targetActor != System.Guid.Empty) {
+				return Transition.Inner<Hostile> ();
+				//return Transition.Sibling<Hostile> ();
+			}
+
 			return Transition.InnerEntry<Passive>();
 		}
 	}
@@ -136,7 +174,10 @@ namespace ActorHSM
 
 		public override Transition EvaluateTransitions()
 		{
-			return Transition.Sibling<Patrolling> ();
+
+
+
+			return Transition.InnerEntry<Patrolling> ();
 		}
 	}
 
@@ -157,9 +198,8 @@ namespace ActorHSM
 
 		public override Transition EvaluateTransitions()
 		{
-			CheckSignals ();
 
-			// if we get a signal
+
 
 			return Transition.InnerEntry<PatrolWalking>();
 		}
@@ -170,6 +210,7 @@ namespace ActorHSM
 		public override void OnEnter()
 		{
 			GetNewRandomWaypoint ();
+
 			SetAttribute (Data.focus, 120);
 
 		}
@@ -178,21 +219,12 @@ namespace ActorHSM
 		{
 			// do we have a target?
 
+			LookForTarget ();
+
+		
+
 			if (HasWaypoint ()) { 
-
-				float distance = DistanceRemaining ();
-
-				if (distance > 0) {
-					SetAttribute (Data.waypoint, Engine.player.location);
-
-					if (distance < GetMinDesiredDistanceFromTarget()) {
-						Owner.MoveTowardsLocation (Data.waypoint.Value, false);
-
-					} else if (distance > GetMaxDesiredDistanceFromTarget()) {
-						Owner.MoveTowardsLocation (Data.waypoint.Value, true);
-					}
-
-				}
+				Owner.MoveTowardsLocation (Data.waypoint.Value, true);
 			}
 
 		}
@@ -200,6 +232,7 @@ namespace ActorHSM
 		public override Transition EvaluateTransitions ()
 		{
 			if (HasWaypoint ()) { 
+
 				if (DistanceSqrRemaining () < 1 || Data.focus.Value ==0)
 				{
 					return Transition.Sibling<PatrolLookAround> ();
@@ -247,6 +280,40 @@ namespace ActorHSM
 		public override void OnEnter()
 		{
 
+		}
+
+		public override void PerformStateActions(int actionPoints) {
+
+			float distance = DistanceRemaining ();
+
+			PActor actor = World.GetActorByGuid (Owner.targetActor);
+
+			if (actor == null) {
+				Debug.Log ("actor is null");
+				return;
+
+			}
+
+			if (distance > 0) {
+
+
+				SetAttribute (Data.waypoint, actor.location);
+
+
+				if (distance < GetMinDesiredDistanceFromTarget()) {
+
+
+					
+					Owner.MoveTowardsLocation (Data.waypoint.Value, false);
+
+				} else if (distance > GetMaxDesiredDistanceFromTarget()) {
+
+
+
+					Owner.MoveTowardsLocation (Data.waypoint.Value, true);
+				}
+
+			}
 		}
 
 		public override Transition EvaluateTransitions()

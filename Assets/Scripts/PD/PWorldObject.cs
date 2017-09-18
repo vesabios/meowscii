@@ -20,6 +20,12 @@ public class PWorldObject : PD {
     [HideInInspector]
     public SerializableVector3 dims = new SerializableVector3(1, 1, 1);
 
+	public float distFromPlayer {
+		get {
+			return Vector3.Distance (location, Engine.player.location);
+		}
+	}
+
 
     public virtual void Draw() { }
 
@@ -34,6 +40,10 @@ public class PWorldObject : PD {
 	public virtual void Tick(int actionPoints) {
 
 
+	}
+
+	public virtual bool BlocksMovement() {
+		return true;
 	}
 
 }

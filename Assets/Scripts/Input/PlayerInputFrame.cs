@@ -30,7 +30,7 @@ public class PlayerInputFrame : InputFrame {
 				return;
 
 
-			Player.HandleMovementInput (moveVector);
+			PlayerController.HandleMovementInput (moveVector);
 
 
         }

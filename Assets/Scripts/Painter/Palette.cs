@@ -182,6 +182,19 @@ public class Palette : ScreenComponent {
 			GUI.DrawBox(34,3,2,2,Screen.GenerateBrush(0,bg,32,0));
 			GUI.DrawBox(33,2,2,2,Screen.GenerateBrush(0,fg,32,0));
 
+			string fgs = Mathf.Round(fg).ToString();
+			string bgs = Mathf.Round(bg).ToString();
+
+			{
+				int x = 37;
+
+				GUI.DrawString(x, 3, "FG:" + fgs);
+				GUI.DrawString(x, 4, "BG:" + bgs);
+				GUI.DrawString(x, 5, "CH:"+character.ToString());
+				GUI.DrawString(x, 6, "CP:"+codepage.ToString());
+
+			}
+
         } 
     }
 

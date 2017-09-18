@@ -80,7 +80,6 @@ public class World : MonoBehaviour {
 			{
 				PWorldObject worldObject = (PWorldObject)pd;
 				if (worldObject.zoneID == currentZone.guid) {
-					Debug.Log (worldObject.name+": "+worldObject.location);
 
 					if (worldObject.location == location)
 						return worldObject;
@@ -164,9 +163,23 @@ public class World : MonoBehaviour {
             {
                 PWorldObject worldObject = (PWorldObject)pd;
                 if (worldObject.zoneID == currentZone.guid)
-                    ((PWorldObject)pd).Draw();
+					if (!worldObject.BlocksMovement()) 
+                    	((PWorldObject)pd).Draw();
             }
         }
+
+
+
+		foreach (PD pd in GameData.data)
+		{
+			if (pd is PWorldObject)
+			{
+				PWorldObject worldObject = (PWorldObject)pd;
+				if (worldObject.zoneID == currentZone.guid)
+					if (worldObject.BlocksMovement()) 
+						((PWorldObject)pd).Draw();
+			}
+		}
 
         // draw vfx
 
@@ -197,6 +210,14 @@ public class World : MonoBehaviour {
 
 
     }
+
+	public static PActor GetActorByGuid(System.Guid guid) {
+		foreach (PWorldObject worldObject in zoneObjects) {
+			if (worldObject.guid == guid)
+				return (PActor)worldObject;
+		}
+		return null;
+	}
 
 	static void CalculateViewForActor(PWorldObject a) {
 		if (a.location.x > view.x + Screen.dims.x-playerViewMargin.x)
@@ -235,30 +256,52 @@ public class World : MonoBehaviour {
 		view.y = Mathf.Clamp(view.y, 0, Landscape.dims.y - Screen.dims.y);
 	}
 
-	public static List<PWorldObject> GetWorldObjectsInZone() {
+	public static List<PWorldObject> zoneObjects = new List<PWorldObject>();
+	public static List<PWorldObject> visibleObjects = new List<PWorldObject>();
 
-		List<PWorldObject> results = new List<PWorldObject> ();
+	public static List<PWorldObject> GetWorldObjectsInZone() {
 
 		foreach (PD pd in GameData.data)
 		{
 			if (pd is PWorldObject)
 			{
 				PWorldObject worldObject = (PWorldObject)pd;
-				if (worldObject.zoneID == currentZone.guid)
-					results.Add (worldObject);
+
+				if (worldObject.zoneID == currentZone.guid) {
+					if (!zoneObjects.Contains (worldObject)) {
+						zoneObjects.Add (worldObject);
+					}
+				} else {
+					if (zoneObjects.Contains (worldObject)) {
+						zoneObjects.Remove (worldObject);
+					}
+				}
 			}
 		}
 
-		return results;
+		return zoneObjects;
 	}
+
 
 	public static List<PWorldObject> GetVisibleObjects() {
 
-		List<PWorldObject> zoneObjects = GetWorldObjectsInZone ();
+		GetWorldObjectsInZone ();
 
-		zoneObjects.Remove (Engine.player);
+		foreach (PWorldObject worldObject in zoneObjects) {
 
-		return zoneObjects;
+			if (World.view.Contains ((Vector2)worldObject.location)) {
+				if (!visibleObjects.Contains (worldObject)) {
+					visibleObjects.Add (worldObject);
+				}
+			} else {
+				if (visibleObjects.Contains (worldObject)) {
+					visibleObjects.Remove (worldObject);
+				}
+			}
+		}
+
+
+		return visibleObjects;
 
 
 

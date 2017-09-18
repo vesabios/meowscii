@@ -68,6 +68,20 @@ public class GUI : ScreenComponent {
     }
 
 
+
+	public static void DrawString(Vector2 loc, string s, Color32 c)
+	{
+		for (int i = 0; i < s.Length; i++)
+		{
+			int chr = System.Convert.ToInt32(s[i]);
+
+			c.r = (byte)chr;
+
+			Screen.SetPixel(loc + new Vector2(i, 0), c, Screen.Layer.FLOATING);
+		}
+	}
+
+
     static Vector2 CalcWrappedHeight(string s)
     {
         int u = 0;
@@ -173,6 +187,9 @@ public class GUI : ScreenComponent {
         Color32 brush = Screen.GenerateBrush();
         DrawString(x, y, s, brush);
     }
+
+
+
 
 
 	public static void DrawBox(Rect r, int fg = 60, int bg = 0)

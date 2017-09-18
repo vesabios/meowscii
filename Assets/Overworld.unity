@@ -116,7 +116,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: Hidden/postVHSPro_First
   m_Shader: {fileID: 4800000, guid: e5b137a48bf2c4c668927fd89b6ccbcd, type: 3}
-  m_ShaderKeywords: VHS_FILMGRAIN_ON VHS_JITTER_H_ON VHS_YIQNOISE_ON
+  m_ShaderKeywords: VHS_FILMGRAIN_ON VHS_YIQNOISE_ON
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -487,7 +487,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1682840417}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ba5113e7208c4316acb1028a08587a2, type: 3}
   m_Name: 
@@ -504,8 +504,8 @@ MonoBehaviour:
   mat4: {fileID: 532035183}
   mat_clear: {fileID: 1828509998}
   mat_tape: {fileID: 1502908567}
-  g_showCRT: 0
-  g_showNoise: 0
+  g_showCRT: 1
+  g_showNoise: 1
   g_showJitter: 1
   g_showSignal: 1
   g_showFeedback: 1
@@ -589,40 +589,40 @@ MonoBehaviour:
   noiseLinesNum: 600
   noiseQuantizeX: 0
   filmgrainOn: 1
-  filmGrainAmount: 0.0018
+  filmGrainAmount: 0.029
   signalNoiseOn: 1
   signalNoiseAmount: 0.098
   signalNoisePower: 0.83
   tapeNoiseOn: 0
-  tapeNoiseTH: 0.63
+  tapeNoiseTH: 0.96
   tapeNoiseAmount: 1
   tapeNoiseSpeed: 1
   lineNoiseOn: 0
   lineNoiseAmount: 1
   lineNoiseSpeed: 5
   scanLinesOn: 0
-  scanLineWidth: 1.3
+  scanLineWidth: 0.5
   linesFloatOn: 0
-  linesFloatSpeed: 1
+  linesFloatSpeed: -0.74
   stretchOn: 0
   twitchHOn: 0
   twitchHFreq: 1
   twitchVOn: 0
-  twitchVFreq: 1
-  jitterHOn: 1
+  twitchVFreq: 2.41
+  jitterHOn: 0
   jitterHAmount: 0.47
   jitterVOn: 0
-  jitterVAmount: 0.0001
-  jitterVSpeed: 5
+  jitterVAmount: 15
+  jitterVSpeed: 3.49
   signalTweakOn: 0
-  signalAdjustY: -0.059
-  signalAdjustI: 0
+  signalAdjustY: -0.022
+  signalAdjustI: 0.016
   signalAdjustQ: 0
-  signalShiftY: 1
-  signalShiftI: 1
+  signalShiftY: 1.04
+  signalShiftI: 0.78
   signalShiftQ: 1
-  gammaCorection: 1
-  feedbackOn: 1
+  gammaCorection: 0.91
+  feedbackOn: 0
   feedbackMode: 0
   feedbackThresh: 0.1
   feedbackAmount: 2

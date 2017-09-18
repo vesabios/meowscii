@@ -91,10 +91,10 @@ public class Game : ScreenComponent {
 		PActor player = CreateActor("Human", new Vector3(25,25,0));
 
 
-		//for (int i = 0; i < 15; i++) {
-			CreateActor("Kobold", new Vector3(35,25,0));
+		for (int i = 0; i < 5; i++) {
+			CreateActor("Kobold", new Vector3(Random.Range(30,40),Random.Range(30,50),0));
 
-		//}
+		}
 
         Engine.player = player;
 
@@ -124,7 +124,15 @@ public class Game : ScreenComponent {
 
 		Inspector.Draw ();
 
-		OnUpdatePointer ();
+		VFX.VFXBase.Draw ();
+
+		if (Inspector.pointerOverride) {
+			cursorLocation = Inspector.pointerPos;
+		} else {
+			cursorLocation = Screen.pointerPos;
+
+		}
+
 
         if (PlayerInputFrame.IsActive())
         {

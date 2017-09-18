@@ -23,11 +23,17 @@ public class Engine : MonoBehaviour {
 
     public static Mode mode;
 
+	public static System.Random random;
+
+	static float extraDelay;
+
+
     float turnDelay = 0.1f;
 
     void Awake()
     {
         instance = this;
+		random = new System.Random();
     }
 
 	void Start () {
@@ -103,6 +109,10 @@ public class Engine : MonoBehaviour {
         return true;
     }
 
+	public static void Delay(float t) {
+		extraDelay += t;
+	}
+
 	public static void ProcessTurn(int actionPoints)
     {
         instance.StartCoroutine(instance.IProcessTurn(actionPoints));
@@ -128,6 +138,11 @@ public class Engine : MonoBehaviour {
 		}
 
         yield return new WaitForSeconds(turnDelay);
+
+		yield return new WaitForSeconds(extraDelay);
+		extraDelay = 0;
+
+
         SetMode(Mode.GAMEPLAY);
     }
 
@@ -135,5 +150,34 @@ public class Engine : MonoBehaviour {
     {
         mode = newMode;
     }
+
+
+	public static int AttackRoll(int mean) {
+		return NormalRoll(mean, 3.5f);
+	}
+
+	/*
+        95% of values are within 
+        2 standard deviations of the mean
+        a stddev of 2.5 gives us a range of 
+        5 for stddev and 10 for 2 stddev
+    */
+
+	public static int DamageRoll(int mean) {
+		float std_dev = ((float)mean) * 0.1f;
+		std_dev = Mathf.Max(0.5f, std_dev);
+		return Mathf.Max(1, NormalRoll(mean, std_dev));
+	}
+
+	public static int NormalRoll(int mean, float stdDev = 3.5f) {
+		if (random == null) random = new System.Random();
+		float u1 = (float)random.NextDouble(); //these are uniform(0,1) random doubles
+		float u2 = (float)random.NextDouble();
+		float randStdNormal = Mathf.Sqrt(-2.0f * Mathf.Log(u1)) * Mathf.Sin(2.0f * Mathf.PI * u2); //random normal(0,1)
+		float randNormal = (mean-0.5f) + stdDev * randStdNormal; //random normal(mean,stdDev^2)
+
+		return Mathf.RoundToInt(randNormal);
+	}
+
 
 }

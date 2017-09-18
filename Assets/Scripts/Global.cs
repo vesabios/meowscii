@@ -233,28 +233,22 @@ public class Global : MonoBehaviour {
             case Global.CharacterClass.WIZARD: {
                     return "Wizard";
                 }
-                break;
             case Global.CharacterClass.FIGHTER: {
                     return "Fighter";
                 }
-                break;
             case Global.CharacterClass.DRUID: {
                     return "Druid";
                 }
-                break;
             case Global.CharacterClass.ROGUE: {
                     return "Rogue";
                 }
-                break;
             case Global.CharacterClass.CLERIC: {
                     return "Cleric";
                 }
-                break;
             case Global.CharacterClass.BARBARIAN:
                 {
                     return "Barbarian";
                 }
-                break;
             default:
                 break;
         }
@@ -270,15 +264,12 @@ public class Global : MonoBehaviour {
             case Global.Difficulty.EASY: {
                     return "Easy";
                 }
-                break;
             case Global.Difficulty.NORMAL: {
                     return "Normal";
                 }
-                break;
             case Global.Difficulty.HEROIC: {
                     return "Heroic";
                 }
-                break;
 
             default:
                 break;

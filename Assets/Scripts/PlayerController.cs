@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public static class Player {
+public static class PlayerController {
+	
+	public static PActor actor;
 
 	public static void HandleMovementInput (Vector2 moveVector) {
 
@@ -12,7 +14,11 @@ public static class Player {
 		int actionPointsSpent = 0;
 
 		if (worldObject != null) {
-			actionPointsSpent = InteractWithObject(worldObject);
+			if (worldObject.BlocksMovement ()) {
+				actionPointsSpent = InteractWithObject (worldObject);
+			} else {
+				actionPointsSpent = Engine.player.TryMoving(moveVector);
+			}
 		} else {
 			actionPointsSpent = Engine.player.TryMoving(moveVector);
 		}
