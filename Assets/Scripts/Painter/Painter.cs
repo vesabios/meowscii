@@ -7,7 +7,7 @@ public class Painter : ScreenComponent {
 
 		public Vector2 position;
 		public void Update() {
-
+			/*
 			if (position.y < 2) {
 				if (World.view.y > -2) {
 					World.ScrollView (new Vector2 (0, -1));
@@ -19,6 +19,7 @@ public class Painter : ScreenComponent {
 					World.ScrollView (new Vector2 (0, 1));
 				}
 			}
+			*/
 
 			position.y = Mathf.Max (2, position.y);
 			position.y = Mathf.Min (Screen.dims.y-1, position.y);
@@ -35,11 +36,12 @@ public class Painter : ScreenComponent {
 		MOUSE,
 		CURSOR,
 		BOX,
-		YO
+		CAPTURE
 	}
 
     public static Painter instance;
     public static PainterInputFrame inputFrame;
+	public static PainterCaptureInputFrame captureFrame;
 
     public static Color32 currentBrush = new Color(0, 60, '#');
 	static bool showExtendedBar = false;
@@ -55,6 +57,7 @@ public class Painter : ScreenComponent {
 	static bool showCursorPreview = false;
 
 	static PaintBox paintBox = new PaintBox();
+	static CaptureBox captureBox = new CaptureBox();
 
 	static Cursor cursor = new Cursor();
 	bool primaryDown = false;
@@ -80,6 +83,7 @@ public class Painter : ScreenComponent {
     {
         instance = this;
         inputFrame = gameObject.AddComponent<PainterInputFrame>();
+		captureFrame = gameObject.AddComponent<PainterCaptureInputFrame>();
 
         currentBrush = Screen.GenerateBrush(60, 0, '#');
         active = false;
@@ -209,7 +213,17 @@ public class Painter : ScreenComponent {
 
 
 	public static void SetMode ( Mode newMode) {
+
+		if (newMode == Mode.CAPTURE) {
+			if (mode != Mode.CAPTURE) {
+				captureFrame.Activate ();
+			}
+		} else if (mode == Mode.CAPTURE) {
+			inputFrame.Activate ();
+		}
+
 		mode = newMode;
+
 	}
 
 
@@ -297,8 +311,15 @@ public class Painter : ScreenComponent {
 				}
 				break;
 			}
+		case Mode.CAPTURE:
+			{
+				captureBox.Draw ();
+				break;
+			}
 
 		}
+
+
 
 		DrawBrushBar();
 
@@ -395,6 +416,13 @@ public class Painter : ScreenComponent {
 
 				break;
 			}
+
+		case Mode.CAPTURE:
+			{
+
+				break;
+			}
+
 		}
 
 
@@ -428,6 +456,8 @@ public class Painter : ScreenComponent {
 
 					currentBrush = newBrush;
 
+					Debug.Log (currentBrush);
+
 					if (Input.GetKey (KeyCode.LeftAlt)) {
 
 						int slot = (brushIndex + (brushPage * 10));
@@ -441,11 +471,17 @@ public class Painter : ScreenComponent {
 				}
 			case Mode.BOX:
 				{
-					paintBox.brush = newBrush;
 					break;
 
 				}
+			case Mode.CAPTURE:
+				{
+					break;
+				}
 		}
+
+		paintBox.brush = newBrush;
+
 
     }
 
@@ -485,8 +521,26 @@ public class Painter : ScreenComponent {
 		paintBox.preview = true;
 	}
 
+	void StartCapture() {
+		captureBox.SetTopLeft (Screen.pointerPos);
+		captureBox.SetBottomRight (Screen.pointerPos);
+
+		captureBox.preview = true;
+	}
+
+	void ReviewCapture() {
+		captureBox.Review ();
+		//captureBox.Commit ();
+	}
+
+
 	void CommitBox() {
 		paintBox.Commit ();
+
+	}
+
+	void EndCapture() {
+		captureBox.preview = false;
 
 	}
 
@@ -495,7 +549,8 @@ public class Painter : ScreenComponent {
 
 	}
 
-    public static void SetPixel(uint x, uint y, Color32 brush)
+
+	public static void SetPixel(uint x, uint y, Color32 brush)
     {
         Landscape.SetPixel(x + (uint)World.view.x, y + (uint)World.view.y, brush);
     }
@@ -523,6 +578,12 @@ public class Painter : ScreenComponent {
 					break;
 
 				}
+		case Mode.CAPTURE:
+			{
+				StartCapture ();
+				break;
+			}
+			
 		}
 		primaryDown = true;
     }
@@ -550,6 +611,12 @@ public class Painter : ScreenComponent {
 					paintBox.SetBottomRight (pos);
 					break;
 				}
+		case Mode.CAPTURE:
+			{
+				captureBox.SetBottomRight (pos);
+
+				break;
+			}
 		}
 	
     }
@@ -571,6 +638,11 @@ public class Painter : ScreenComponent {
 				break;
 
 			}
+		case Mode.CAPTURE:
+			{
+				ReviewCapture ();
+				break;
+			}
 		}
 
 		primaryDown = false;
@@ -580,6 +652,8 @@ public class Painter : ScreenComponent {
     public override void SecondaryDown(Vector2 pos)
     {
         Color32 sample = Landscape.GetPixel((uint)Screen.pointerPos.x + (uint)World.view.x, (uint)Screen.pointerPos.y + (uint)World.view.y);
+
+		Debug.Log ("sampling: " + sample.a+","+sample.b+","+sample.g+","+sample.r);
 
 		Palette.SetSelectionFromBrush (sample);
 

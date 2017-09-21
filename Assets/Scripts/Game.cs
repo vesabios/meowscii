@@ -130,14 +130,54 @@ public class Game : ScreenComponent {
 			cursorLocation = Inspector.pointerPos;
 		} else {
 			cursorLocation = Screen.pointerPos;
-
 		}
+
+		GUI.DrawBox (new Rect (0, 30, 60, 4), 60, 0);
+
+		GUI.DrawString (new Vector2 (1, 31), "HP", Screen.GenerateBrush (60,0));
+
+		string hpdetail = Engine.player.hp + "/" + Engine.player.GetMaxHitPoints ();
+
+
+		float pct = (float)Engine.player.hp / (float)Engine.player.GetMaxHitPoints ();
+
+		Color32 brush;
+		for (int i = 0; i < 8; i++) {
+
+			if (i <= pct * 8.0f) {
+				brush = Screen.GenerateBrush (21,27);
+
+			} else {
+				brush = Screen.GenerateBrush (33,26);
+			}
+
+			if (i<hpdetail.Length) 
+				brush.r = (byte)(hpdetail.ToCharArray() [i]);
+			
+
+			GUI.SetPixel(4+i,31,brush);
+		}
+
+	//	GUI.DrawString (new Vector2 (4, 31), "12/", Screen.GenerateBrush (32,35));
+	//	GUI.DrawString (new Vector2 (7, 31), "44   ", Screen.GenerateBrush (35,32));
+
+
+		GUI.DrawString (new Vector2 (45, 31), Landscape.zoneName, Screen.GenerateBrush (34,0));
+
+		//GUI.DrawString (new Vector2 (13, 31), "St", Screen.GenerateBrush (60,0));
+		//GUI.DrawString (new Vector2 (16, 31), "33/33   ", Screen.GenerateBrush (45,47));
+
+		GUI.DrawString (new Vector2 (15, 32), "Level 1", Screen.GenerateBrush (60,0));
+
+		//GUI.DrawString (new Vector2 (1, 32), "Exp 1425", Screen.GenerateBrush (60,0));
+
+
+		//GUI.DrawString (new Vector2 (1, 30), "You have slain a kobold!", Screen.GenerateBrush (61,0));
 
 
         if (PlayerInputFrame.IsActive())
         {
 			Screen.SetHardwareCursorPosition (cursorLocation);
-
         }
 
     }

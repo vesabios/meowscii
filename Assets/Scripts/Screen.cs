@@ -348,11 +348,20 @@ public class Screen : MonoBehaviour
         }
     }
 
+	public static bool cursorVisible = false;
+
 	public static void SetHardwareCursorPosition(Vector2 pos) {
-		mat.SetVector ("_CursorPos", new Vector4(pos.x, (dims.y-1) - pos.y, 0, 0));
+		mat.SetVector ("_CursorPos", new Vector4(pos.x, (dims.y-1) - pos.y, cursorVisible ? 1.0f : 0.0f, 0));
 
 	}
 
+	public static byte GetCharacterFromBrush(Color32 brush) {
+		return brush.r;
+	}
+
+	public static byte GetFGFromBrush(Color32 brush) {
+		return brush.r;
+	}
 
 
     public static Color32 GenerateBrush(int fg = 63, int bg = 0, int c = 0, int page = 0)

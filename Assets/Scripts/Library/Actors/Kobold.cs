@@ -22,6 +22,7 @@ public class Kobold : Monster {
 		disposition = -20;
 
 		hp = 10;
+		baseHitPoints = 10;
 	}
 		
 
@@ -33,7 +34,7 @@ public class Kobold : Monster {
 
 		} else {
 
-			brush = Screen.GenerateBrush (31, 58, 37, 0);
+			brush = Screen.GenerateBrush (59, 58, 37, 0);
 		//	brush.r = (byte)Convert.ToInt32 ('x');
 
 		}

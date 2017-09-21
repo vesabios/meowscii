@@ -4,6 +4,7 @@ using UnityEngine;
 
 class PaintBox {
 
+
 	public Color32 brush = new Color32();
 
 	// indices are values for {TL, TR, BL, BR, T, L, R, B, CodePage}
@@ -140,6 +141,10 @@ class PaintBox {
 			Screen.SetPixel ((uint)s.xMax , (uint)s.yMin, Screen.GenerateBrush(fg,bg,styles [currentStyle, 1],cp), layer);
 			Screen.SetPixel ((uint)s.xMin , (uint)s.yMax, Screen.GenerateBrush(fg,bg,styles [currentStyle, 2],cp), layer);
 			Screen.SetPixel ((uint)s.xMax , (uint)s.yMax, Screen.GenerateBrush(fg,bg,styles [currentStyle, 3],cp), layer);
+
+			string toolTip = s.width + "x" + s.height;
+
+			GUI.DrawString (new Vector2(s.xMax - toolTip.Length , s.yMax - 1), toolTip , Screen.GenerateBrush());
 
 
 		}

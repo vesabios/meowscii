@@ -27,7 +27,7 @@ public class PActor : PWorldObject, IActor {
 
 	public PActor Reference { get { return this; } }
 
-
+	protected int baseHitPoints;
     protected int baseMovementCost; // how many action points does it cost to move 1 square
 	protected int baseActionCost; // how many action points does it take to use a full action
 	protected int baseAttackCost;
@@ -178,6 +178,10 @@ public class PActor : PWorldObject, IActor {
 
 	public virtual int GetAttackBonus() {
 		return 0;
+	}
+
+	public virtual int GetMaxHitPoints() {
+		return baseHitPoints;
 	}
 
 	public virtual int GetMovementCost() {
@@ -410,7 +414,7 @@ public class PActor : PWorldObject, IActor {
 			new VFX.Floater (targetActor.location, damage.ToString ());
 
 			targetActor.TakeDamageFrom (this, damage);
-			Engine.Delay (0.3f);
+			Engine.Delay (0.25f);
 
 
 		} else {
@@ -418,7 +422,7 @@ public class PActor : PWorldObject, IActor {
 			new VFX.Whiff (targetActor.location);
 			targetActor.TakeDamageFrom (this, 0);
 
-			Engine.Delay (0.2f);
+			Engine.Delay (0.125f);
 
 		}
 

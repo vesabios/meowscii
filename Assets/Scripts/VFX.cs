@@ -151,7 +151,6 @@ namespace VFX {
 
 
 	public class Floater : VFXBase {
-		bool reverse = false;
 
 		string displayString;
 
@@ -171,11 +170,11 @@ namespace VFX {
 				location.y--;
 			}
 
-			Color32 c = Screen.GenerateBrush (colors[frame], bgs[frame]);
+			Color32 c = Screen.GenerateBrush (colors[frame/2], bgs[frame/2]);
 
 			GUI.DrawString((int)loc.x, (int)loc.y, displayString, c);
 
-			return frame < colors.Length-1;
+			return frame/2 < colors.Length-1;
 
 		}
 

@@ -11,7 +11,7 @@ public class Landscape : MonoBehaviour {
 
     static Landscape instance;
 
-    static string zoneName;
+    public static string zoneName;
 
     void Awake()
     {
@@ -46,6 +46,12 @@ public class Landscape : MonoBehaviour {
     {
         return (((uint)dims.y - 1) - y) * (uint)dims.x + x;
     }
+
+
+	public static Color32 GetPixel(Vector2 loc) 
+	{
+		return GetPixel((uint)loc.x, (uint)loc.y);
+	}
 
     public static Color32 GetPixel(uint x, uint y)
     {

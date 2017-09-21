@@ -42,7 +42,7 @@ Shader "Screen" {
 
 			float4 _BaseLayerDims;
 
-			fixed2 _CursorPos;
+			fixed4 _CursorPos;
 
 
 
@@ -114,7 +114,7 @@ Shader "Screen" {
 				float xx = (screenPos.x == _CursorPos.x) && (screenPos.y == _CursorPos.y) ? 1 : 0;
 				half cursorBrightness = xx * step(0,charuv.y) * step (charuv.y, 1);
 
-				cursorBrightness *= step(fmod(_Time.w, 1),0.5);
+				cursorBrightness *= step(fmod(_Time.w, 1),0.5) * _CursorPos.z;
 
 				charuv *= float2(1.0f / 8.0f, 1.0f / 8.0f); // back to normalized range
 				charuv *= _CharDims.zw;

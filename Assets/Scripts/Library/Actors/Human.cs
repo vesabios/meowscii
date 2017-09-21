@@ -12,7 +12,8 @@ public class Human : PActor {
 		baseActionCost = 40;
 		baseAttackCost = 30;
 
-		hp = 20;
+		hp = baseHitPoints = 60;
+
 
 	}
 

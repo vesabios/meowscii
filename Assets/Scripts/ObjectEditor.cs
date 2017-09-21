@@ -15,6 +15,8 @@ public class ObjectEditor : ScreenComponent {
 
 	PItem selectedItem;
 
+	Pix backgroundPix;
+
     void Awake()
     {
         active = false;
@@ -22,6 +24,7 @@ public class ObjectEditor : ScreenComponent {
         inputFrame = gameObject.AddComponent<ObjectEditorInputFrame>();
 
 
+		backgroundPix = Pix.Load ("parchment");
     }
 
 
@@ -129,6 +132,9 @@ public class ObjectEditor : ScreenComponent {
     {
         if (active)
         {
+
+			backgroundPix.Draw (new Vector2(0, 0));
+
             inspector.Draw(new Vector2(1, 1));
         }
 

@@ -5,10 +5,10 @@ public class GUIText : GUIElement {
 
     public string text;
 
-    Color32 brush;
-    Color32 activeBrush;
+    protected Color32 brush;
+    protected Color32 activeBrush;
 
-    int cursorIndex = 0;
+    protected int cursorIndex = 0;
 
 
     public void Start()

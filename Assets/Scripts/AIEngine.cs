@@ -284,8 +284,6 @@ namespace ActorHSM
 
 		public override void PerformStateActions(int actionPoints) {
 
-			float distance = DistanceRemaining ();
-
 			PActor actor = World.GetActorByGuid (Owner.targetActor);
 
 			if (actor == null) {
@@ -294,24 +292,31 @@ namespace ActorHSM
 
 			}
 
-			if (distance > 0) {
+			float distance = ((Vector2)actor.location - (Vector2)Owner.location).magnitude ;
+
+
+			if (distance > 1) {
 
 
 				SetAttribute (Data.waypoint, actor.location);
 
 
-				if (distance < GetMinDesiredDistanceFromTarget()) {
+				if (distance < GetMinDesiredDistanceFromTarget ()) {
 
 
 					
 					Owner.MoveTowardsLocation (Data.waypoint.Value, false);
 
-				} else if (distance > GetMaxDesiredDistanceFromTarget()) {
+				} else if (distance > GetMaxDesiredDistanceFromTarget ()) {
 
 
 
 					Owner.MoveTowardsLocation (Data.waypoint.Value, true);
 				}
+
+			} else {
+
+				Owner.Attack (actor);
 
 			}
 		}

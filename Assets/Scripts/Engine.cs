@@ -49,6 +49,7 @@ public class Engine : MonoBehaviour {
         // screen components
         // order is important! last item added is first item drawn
 
+		gameObject.AddComponent<StringInputDialog> ();
         gameObject.AddComponent<ObjectEditor>();
         gameObject.AddComponent<Palette>();
         gameObject.AddComponent<Painter>();
@@ -132,15 +133,18 @@ public class Engine : MonoBehaviour {
 				PActor actor = (PActor)pd;
 				if (actor.zoneID == World.currentZone.guid) {
 					actor.Tick (actionPoints);
-					//yield return null;
+					if (extraDelay > 0) {
+						yield return new WaitForSeconds(extraDelay);
+						extraDelay = 0;
+
+					}
+
 				}
 			}
 		}
 
         yield return new WaitForSeconds(turnDelay);
 
-		yield return new WaitForSeconds(extraDelay);
-		extraDelay = 0;
 
 
         SetMode(Mode.GAMEPLAY);

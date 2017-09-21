@@ -37,8 +37,6 @@ public class PainterInputFrame : InputFrame
 
 				}
 
-
-
 			}
 
 			cursorMoveTimer += Time.deltaTime;
@@ -143,6 +141,10 @@ public class PainterInputFrame : InputFrame
 
 			if (Input.GetKeyDown (KeyCode.K)) {
 				Painter.SetMode (Painter.Mode.CURSOR);
+			} 
+
+			if (Input.GetKeyDown (KeyCode.C)) {
+				Painter.SetMode (Painter.Mode.CAPTURE);
 			} 
 
 		} else if (Input.GetKey (KeyCode.LeftControl)) {

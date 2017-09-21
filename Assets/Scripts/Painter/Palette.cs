@@ -161,10 +161,10 @@ public class Palette : ScreenComponent {
 	}
 
 	public static void SetSelectionFromBrush(Color32 brush) {
-		fg = brush.g;
-		bg = brush.b;
-		character = brush.r;
-		codepage = brush.a;
+		fg = brush.fg();
+		bg = brush.bg();
+		character = brush.character();
+		codepage = brush.codepage();
 	}
 
 	void UpdateSelectedBrush() {

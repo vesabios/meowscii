@@ -21,4 +21,33 @@ public static class ExtensionMethods
         return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
     }
 
+
+	public static byte fg(this Color32 c) {
+		return (byte)(c.g % 64);
+	}
+
+	public static byte bg(this Color32 c) {
+		return c.b;
+	}
+
+	public static byte codepage(this Color32 c) {
+		return (byte)(c.g / 64);
+	}
+
+	public static byte character(this Color32 c) {
+		return c.r;
+	}
+
+	/*
+	 * 
+	 *     public static Color32 GenerateBrush(int fg = 63, int bg = 0, int c = 0, int page = 0)
+    {
+        byte r = (byte)(c);
+        byte g = (byte)(fg + (page * 64));
+        byte b = (byte)(bg);
+        byte a = 255;
+        return new Color32(r,g,b,a);
+    }*/
+
+
 }

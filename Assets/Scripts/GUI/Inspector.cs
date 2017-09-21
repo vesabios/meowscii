@@ -11,6 +11,15 @@ public static class Inspector {
 	static List<PWorldObject> visibleObjects;
 
 	public static void CycleTargets() {
+
+		if (!Screen.cursorVisible) {
+			Screen.cursorVisible = true;
+			pointerOverride = true;
+			FixIndex ();
+
+		}
+			
+
 		pointerOverride = true;
 		IncreaseTargetIndex ();
 
@@ -21,6 +30,7 @@ public static class Inspector {
 			targetIndex = -1;
 			return;
 		}
+		Screen.cursorVisible = true;
 		targetIndex++;
 		FixIndex ();
 
@@ -52,18 +62,22 @@ public static class Inspector {
 
 		visibleObjects = World.GetVisibleObjects ();
 
+
+		if (visibleObjects.Contains (Engine.player))
+			visibleObjects.Remove (Engine.player);
+
 		if (visibleObjects.Count == 0)
 			return;
+
 
 		FixIndex ();
 		System.Guid id = visibleObjects[targetIndex].guid;
 
 		visibleObjects.Sort((x, y) => x.guid.CompareTo(y.guid));
-		visibleObjects.Sort((x, y) => x.distFromPlayer.CompareTo(y.distFromPlayer));
+		//visibleObjects.Sort((x, y) => x.distFromPlayer.CompareTo(y.distFromPlayer));
 
 		for (int i = 0; i < visibleObjects.Count; i++) {
 			if (visibleObjects [i].guid == id) {
-				//Debug.Log (visibleObjects [i].guid+" : "+id );
 				targetIndex = i;
 			}
 		}
