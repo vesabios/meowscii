@@ -50,6 +50,7 @@ public class Engine : MonoBehaviour {
         // order is important! last item added is first item drawn
 
 		gameObject.AddComponent<StringInputDialog> ();
+		gameObject.AddComponent<Inventory>();
         gameObject.AddComponent<ObjectEditor>();
         gameObject.AddComponent<Palette>();
         gameObject.AddComponent<Painter>();

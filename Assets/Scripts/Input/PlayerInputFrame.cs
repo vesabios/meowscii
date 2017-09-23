@@ -55,6 +55,7 @@ public class PlayerInputFrame : InputFrame {
         if (Input.GetKeyDown(KeyCode.F1)) { Painter.Activate(); }
         if (Input.GetKeyDown(KeyCode.F2)) { ObjectEditor.Activate(); }
 
+		if (Input.GetKeyDown(KeyCode.I)) { Inventory.Activate (); }
 
 		if (Input.GetKeyDown(KeyCode.Tab)) { Inspector.CycleTargets (); }
 
@@ -148,7 +149,6 @@ public class PlayerInputFrame : InputFrame {
         if (Input.GetKeyDown(KeyCode.F)) { }
         if (Input.GetKeyDown(KeyCode.G)) { }
         if (Input.GetKeyDown(KeyCode.H)) { }
-        if (Input.GetKeyDown(KeyCode.I)) { }
         if (Input.GetKeyDown(KeyCode.J)) { }
         if (Input.GetKeyDown(KeyCode.K)) { }
         if (Input.GetKeyDown(KeyCode.L)) { }

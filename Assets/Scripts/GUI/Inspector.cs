@@ -60,8 +60,7 @@ public static class Inspector {
 	public static void RefreshObjectList() {
 
 
-		visibleObjects = World.GetVisibleObjects ();
-
+		visibleObjects = World.GetNotableObjects ();
 
 		if (visibleObjects.Contains (Engine.player))
 			visibleObjects.Remove (Engine.player);
@@ -74,7 +73,7 @@ public static class Inspector {
 		System.Guid id = visibleObjects[targetIndex].guid;
 
 		visibleObjects.Sort((x, y) => x.guid.CompareTo(y.guid));
-		//visibleObjects.Sort((x, y) => x.distFromPlayer.CompareTo(y.distFromPlayer));
+		visibleObjects.Sort((x, y) => x.distFromPlayer.CompareTo(y.distFromPlayer));
 
 		for (int i = 0; i < visibleObjects.Count; i++) {
 			if (visibleObjects [i].guid == id) {
@@ -91,32 +90,45 @@ public static class Inspector {
 
 	public static void Draw() {
 
+
+
 		RefreshObjectList ();
+
+		//GUI.DrawBox (new Rect (1, 1, 20, 1));
 
 		for (int i = 0; i < visibleObjects.Count; i++) {
 			PWorldObject worldObject = visibleObjects [i];
 
 			if (targetIndex == i) {
-				GUI.DrawString (2, i, worldObject.shortDisplayName, Screen.GenerateBrush(5,2));
+
+				string s = "";
 
 				pointerPos = Screen.GetWorldPixelInScreenSpace (worldObject.location);
 
-			} else {
+				if (worldObject is PActor) {
+					s = ((PActor)worldObject).stateMachine.GetStateStackAsString ()+" ";
 
-				GUI.DrawString (2, i, worldObject.shortDisplayName, Screen.GenerateBrush(60,0));
-			}
+					//Debug.Log (s);
+					int index = s.LastIndexOf (".");
+					if (index > -1) s = s.Substring(index+1);
+
+				}
+
+				s += worldObject.shortDisplayName;
+
+				//Vector2 pos = Screen.GetWorldPixelInScreenSpace (worldObject.location);
+
+				//pos.x -= s.Length / 2;
+
+				//pos.y -= 2;
+
+				GUI.DrawString (1, 1, s, Screen.GenerateBrush(5,2));
 
 
-			if (worldObject is PActor) {
-				string s = ((PActor)worldObject).stateMachine.GetStateStackAsString ();
+			} 
 
-				//Debug.Log (s);
-				int index = s.LastIndexOf (".");
-				if (index > -1) s = s.Substring(index+1);
 
-				GUI.DrawString (10, i, s, Screen.GenerateBrush(62,0));
 
-			}
 
 
 

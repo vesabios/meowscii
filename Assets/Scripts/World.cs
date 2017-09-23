@@ -258,6 +258,7 @@ public class World : MonoBehaviour {
 
 	public static List<PWorldObject> zoneObjects = new List<PWorldObject>();
 	public static List<PWorldObject> visibleObjects = new List<PWorldObject>();
+	public static List<PWorldObject> notableObjects = new List<PWorldObject>();
 
 	public static List<PWorldObject> GetWorldObjectsInZone() {
 
@@ -306,5 +307,35 @@ public class World : MonoBehaviour {
 
 
 	}
+
+
+	public static List<PWorldObject> GetNotableObjects() {
+
+		GetVisibleObjects ();
+
+		foreach (PWorldObject worldObject in visibleObjects) {
+
+			if (worldObject is PActor) {
+				if (((PActor)worldObject).IsAlive ()) {
+					if (!notableObjects.Contains (worldObject)) {
+						notableObjects.Add (worldObject);
+					}
+				} else if (notableObjects.Contains (worldObject)) {
+					notableObjects.Remove (worldObject);
+				}
+			} else {
+				if (notableObjects.Contains (worldObject)) {
+					notableObjects.Remove (worldObject);
+				}
+			}
+		}
+
+
+		return notableObjects;
+
+
+
+	}
+
 
 }
